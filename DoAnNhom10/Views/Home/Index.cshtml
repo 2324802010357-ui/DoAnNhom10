@@ -1,0 +1,120 @@
+﻿@{
+    ViewBag.Title = "Trang chủ";
+}
+
+<div class="jumbotron text-center">
+    <h1>Clothes Shop</h1>
+    <p class="lead">Mua sắm thời trang nhanh chóng và tiện lợi.</p>
+</div>
+
+<div class="container">
+    <h2 class="mb-4">Sản phẩm nổi bật</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <img src="~/Content/images/tee1.jpg" class="card-img-top" alt="Áo thun cotton">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Áo thun cotton</h5>
+                    <p class="card-text text-danger fw-bold">150.000đ</p>
+                    <a href="@Url.Action("Details","Products", new { id = 1 })" class="btn btn-primary">Xem</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-4" />
+
+    <h2 class="mb-4">Các sản phẩm khác</h2>
+    <div class="row">
+        @* Sản phẩm 2 *@
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="~/Content/images/tee2.jpg" class="card-img-top" alt="Áo sơ mi nam">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Áo sơ mi nam</h5>
+                    <p class="card-text text-danger fw-bold">250.000đ</p>
+                    <a href="@Url.Action("Details","Products", new { id = 2 })" class="btn btn-outline-primary">Xem</a>
+                </div>
+            </div>
+        </div>
+
+        @* Sản phẩm 3 *@
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="~/Content/images/jean1.jpg" class="card-img-top" alt="Quần jean">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Quần jean</h5>
+                    <p class="card-text text-danger fw-bold">400.000đ</p>
+                    <a href="@Url.Action("Details","Products", new { id = 3 })" class="btn btn-outline-primary">Xem</a>
+                </div>
+            </div>
+        </div>
+
+        @* Tương tự bạn thêm 6 sản phẩm nữa *@
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="~/Content/images/skirt1.jpg" class="card-img-top" alt="Chân váy">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Chân váy nữ</h5>
+                    <p class="card-text text-danger fw-bold">220.000đ</p>
+                    <a href="@Url.Action("Details","Products", new { id = 4 })" class="btn btn-outline-primary">Xem</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="~/Content/images/shoe1.jpg" class="card-img-top" alt="Giày sneaker">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Giày sneaker</h5>
+                    <p class="card-text text-danger fw-bold">600.000đ</p>
+                    <a href="@Url.Action("Details","Products", new { id = 5 })" class="btn btn-outline-primary">Xem</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="~/Content/images/bag1.jpg" class="card-img-top" alt="Túi xách nữ">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Túi xách nữ</h5>
+                    <p class="card-text text-danger fw-bold">550.000đ</p>
+                    <a href="@Url.Action("Details","Products", new { id = 6 })" class="btn btn-outline-primary">Xem</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="~/Content/images/jacket1.jpg" class="card-img-top" alt="Áo khoác da">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Áo khoác da</h5>
+                    <p class="card-text text-danger fw-bold">750.000đ</p>
+                    <a href="@Url.Action("Details","Products", new { id = 7 })" class="btn btn-outline-primary">Xem</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="~/Content/images/hat1.jpg" class="card-img-top" alt="Mũ lưỡi trai">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Mũ lưỡi trai</h5>
+                    <p class="card-text text-danger fw-bold">120.000đ</p>
+                    <a href="@Url.Action("Details","Products", new { id = 8 })" class="btn btn-outline-primary">Xem</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="~/Content/images/dress1.jpg" class="card-img-top" alt="Đầm dự tiệc">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Đầm dự tiệc</h5>
+                    <p class="card-text text-danger fw-bold">900.000đ</p>
+                    <a href="@Url.Action("Details","Products", new { id = 9 })" class="btn btn-outline-primary">Xem</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - Shop</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/site.css" rel="stylesheet" />
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <!-- Logo / Brand -->
+            <a class="navbar-brand" href="@Url.Action("Index","Home")">Clothes Shop</a>
+
+            <!-- Menu trái -->
+            <ul class="nav navbar-nav">
+                <li>@Html.ActionLink("Trang chủ", "Index", "Home")</li>
+                <li>@Html.ActionLink("Sản phẩm", "Index", "Products")</li>
+                <li>@Html.ActionLink("Giỏ hàng", "Index", "Cart")</li>
+                <li>@Html.ActionLink("Liên hệ", "Index", "Home")</li>
+            </ul>
+
+            <!-- Menu phải -->
+            <ul class="nav navbar-nav navbar-right">
+                @if (Session["USER"] == null)
+                {
+                    <li>@Html.ActionLink("Đăng nhập", "Login", "Account")</li>
+                    <li>
+                        <a class="btn btn-success navbar-btn"
+                           href="@Url.Action("Register", "Account")">Đăng ký</a>
+                    </li>
+                }
+                else
+                {
+                    var user = Session["USER"] as DoAnNhom10.Models.User;
+                    <li><a href="#">Xin chào @user.FullName</a></li>
+                    <li>@Html.ActionLink("Đăng xuất", "Logout", "Account")</li>
+                }
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container body-content" style="padding-top:70px">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Clothes Shop</p>
+        </footer>
+    </div>
+</body>
+</html>

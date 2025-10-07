@@ -1,0 +1,59 @@
+﻿.navbar {
+    background-color: #1c1c1c !important;
+    padding: 10px 0;
+}
+
+    .navbar .nav > li > a {
+        color: #fff !important;
+        font-weight: 500;
+        margin: 0 10px;
+    }
+
+        .navbar .nav > li > a:hover {
+            color: #2ecc71 !important;
+        }
+
+.btn-outline-light {
+    border: 1px solid #fff;
+    color: #fff;
+    border-radius: 20px;
+    padding: 5px 15px;
+    background: transparent;
+}
+
+    .btn-outline-light:hover {
+        background: #fff;
+        color: #000;
+    }
+
+.btn-success {
+    border-radius: 20px;
+    padding: 5px 15px;
+    background-color: #00b894 !important;
+    border: none;
+}
+.card {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    }
+
+    .card img {
+        height: 220px;
+        object-fit: cover;
+    }
+
+.card-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.btn {
+    border-radius: 20px;
+    padding: 6px 16px;
+}

@@ -1,0 +1,29 @@
+﻿@model DoAnNhom10.Models.User
+@{
+    ViewBag.Title = "Đăng ký";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Đăng ký</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+
+@using (Html.BeginForm("Register", "Account", FormMethod.Post))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.FullName, "Họ và tên")
+        @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Email, "Email")
+        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.PasswordHash, "Mật khẩu")
+        @Html.PasswordFor(m => m.PasswordHash, new { @class = "form-control" })
+    </div>
+    <button type="submit" class="btn btn-success">Đăng ký</button>
+}

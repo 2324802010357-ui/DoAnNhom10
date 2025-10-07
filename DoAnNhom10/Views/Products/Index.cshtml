@@ -1,0 +1,33 @@
+﻿@model IEnumerable<DoAnNhom10.Models.Product>
+
+@{
+    ViewBag.Title = "Danh sách sản phẩm";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Sản phẩm nổi bật</h2>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            var firstImage = item.ProductImages.FirstOrDefault();
+            var imgUrl = firstImage != null
+                ? Url.Content(firstImage.Url)
+                : Url.Content("~/Content/images/placeholder.png");
+
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="@imgUrl" class="card-img-top" alt="@item.Name" style="height:200px; object-fit:cover;" />
+                    <div class="card-body text-center">
+                        <h5 class="card-title">@item.Name</h5>
+                        <p class="text-danger fw-bold">@item.BasePrice.ToString("N0") đ</p>
+                        <a href="@Url.Action("Details", "Products", new { id = item.ProductID })"
+                           class="btn btn-primary btn-sm">Xem chi tiết</a>
+                        <a href="@Url.Action("AddToCart", "Cart", new { id = item.ProductID })"
+                           class="btn btn-success btn-sm">Thêm vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

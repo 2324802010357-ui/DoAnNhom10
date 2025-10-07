@@ -1,0 +1,31 @@
+﻿@model DoAnNhom10.Models.Product
+
+@{
+    ViewBag.Title = "Xóa sản phẩm";
+}
+
+<h2>Xóa sản phẩm</h2>
+
+<h3>Bạn có chắc muốn xóa sản phẩm này?</h3>
+<div>
+    <h4>@Model.Name</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>Mô tả</dt>
+        <dd>@Model.Description</dd>
+
+        <dt>Giá</dt>
+        <dd>@String.Format("{0:N0} đ", Model.BasePrice)</dd>
+    </dl>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.ProductID)
+
+    <div class="form-actions no-color">
+        <input type="submit" value="Xóa" class="btn btn-danger" /> |
+        @Html.ActionLink("Quay lại danh sách", "Index")
+    </div>
+}
