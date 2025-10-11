@@ -4,26 +4,473 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Đăng ký</h2>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="register-container">
+                <div class="register-header text-center mb-4">
+                    <i class="fas fa-user-plus fa-3x text-success mb-3"></i>
+                    <h2>Đăng ký tài khoản</h2>
+                    <p class="text-muted">Tạo tài khoản để trải nghiệm mua sắm tuyệt vời!</p>
+                </div>
 
-@if (ViewBag.Error != null)
-{
-    <div class="alert alert-danger">@ViewBag.Error</div>
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <i class="fas fa-exclamation-circle"></i> @ViewBag.Error
+                        <button type="button" class="close" data-dismiss="alert">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+                }
+
+                @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "register-form" }))
+                {
+                    <div class="form-group">
+                        <label for="FullName">
+                            <i class="fas fa-user"></i> Họ và tên *
+                        </label>
+                        @Html.TextBoxFor(m => m.FullName, new { 
+                            @class = "form-control search-box", 
+                            placeholder = "Nhập họ và tên đầy đủ",
+                            id = "FullName"
+                        })
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Email">
+                            <i class="fas fa-envelope"></i> Email *
+                        </label>
+                        @Html.TextBoxFor(m => m.Email, new { 
+                            @class = "form-control search-box", 
+                            type = "email",
+                            placeholder = "Nhập địa chỉ email",
+                            id = "Email"
+                        })
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="PasswordHash">
+                            <i class="fas fa-lock"></i> Mật khẩu *
+                        </label>
+                        <div class="password-input-container">
+                            @Html.PasswordFor(m => m.PasswordHash, new { 
+                                @class = "form-control search-box", 
+                                placeholder = "Nhập mật khẩu (tối thiểu 6 ký tự)",
+                                id = "PasswordHash"
+                            })
+                            <button type="button" class="password-toggle" onclick="togglePassword('PasswordHash', 'passwordIcon1')">
+                                <i class="fas fa-eye" id="passwordIcon1"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength">
+                            <div class="strength-bar">
+                                <div class="strength-fill"></div>
+                            </div>
+                            <span class="strength-text">Độ mạnh mật khẩu</span>
+                        </div>
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">
+                            <i class="fas fa-lock"></i> Xác nhận mật khẩu *
+                        </label>
+                        <div class="password-input-container">
+                            <input type="password" 
+                                   id="confirmPassword" 
+                                   name="confirmPassword"
+                                   class="form-control search-box" 
+                                   placeholder="Nhập lại mật khẩu"
+                                   required />
+                            <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword', 'passwordIcon2')">
+                                <i class="fas fa-eye" id="passwordIcon2"></i>
+                            </button>
+                        </div>
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input type="checkbox" class="form-check-input" id="agreeTerms" required>
+                        <label class="form-check-label" for="agreeTerms">
+                            Tôi đồng ý với <a href="#" class="terms-link">Điều khoản sử dụng</a> và <a href="#" class="terms-link">Chính sách bảo mật</a>
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input type="checkbox" class="form-check-input" id="newsletter">
+                        <label class="form-check-label" for="newsletter">
+                            Đăng ký nhận tin khuyến mãi và ưu đãi đặc biệt
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-block btn-lg register-btn">
+                        <i class="fas fa-user-plus"></i> Đăng ký tài khoản
+                    </button>
+                }
+
+                <div class="register-footer text-center mt-4">
+                    <p class="text-muted">Đã có tài khoản?</p>
+                    <a href="@Url.Action("Login", "Account")" class="btn btn-outline-primary">
+                        <i class="fas fa-sign-in-alt"></i> Đăng nhập ngay
+                    </a>
+                </div>
+
+                <!-- Social Register -->
+                <div class="social-register mt-4">
+                    <div class="divider">
+                        <span>hoặc đăng ký với</span>
+                    </div>
+                    <div class="social-buttons">
+                        <button class="btn btn-social btn-facebook">
+                            <i class="fab fa-facebook-f"></i> Facebook
+                        </button>
+                        <button class="btn btn-social btn-google">
+                            <i class="fab fa-google"></i> Google
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.register-container {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-top: 30px;
 }
 
-@using (Html.BeginForm("Register", "Account", FormMethod.Post))
-{
-    <div class="form-group">
-        @Html.LabelFor(m => m.FullName, "Họ và tên")
-        @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Email, "Email")
-        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email" })
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.PasswordHash, "Mật khẩu")
-        @Html.PasswordFor(m => m.PasswordHash, new { @class = "form-control" })
-    </div>
-    <button type="submit" class="btn btn-success">Đăng ký</button>
+.register-header i {
+    color: #56ab2f;
+}
+
+.register-header h2 {
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.form-group label i {
+    margin-right: 8px;
+    color: #56ab2f;
+}
+
+.password-input-container {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+    font-size: 14px;
+}
+
+.password-toggle:hover {
+    color: #56ab2f;
+}
+
+.password-strength {
+    margin-top: 8px;
+}
+
+.strength-bar {
+    width: 100%;
+    height: 4px;
+    background: #eee;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.strength-fill {
+    height: 100%;
+    width: 0%;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+.strength-text {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+    display: block;
+}
+
+.form-check-label {
+    font-size: 14px;
+    color: #666;
+}
+
+.terms-link {
+    color: #56ab2f;
+    text-decoration: none;
+}
+
+.terms-link:hover {
+    text-decoration: underline;
+}
+
+.register-btn {
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.register-footer {
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.social-register {
+    text-align: center;
+}
+
+.divider {
+    position: relative;
+    margin: 20px 0;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #eee;
+}
+
+.divider span {
+    background: white;
+    padding: 0 20px;
+    color: #999;
+    font-size: 14px;
+}
+
+.social-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn-social {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-facebook {
+    background: #3b5998;
+    color: white;
+    border: none;
+}
+
+.btn-facebook:hover {
+    background: #2d4373;
+    color: white;
+}
+
+.btn-google {
+    background: #db4437;
+    color: white;
+    border: none;
+}
+
+.btn-google:hover {
+    background: #c23321;
+    color: white;
+}
+
+.invalid-feedback {
+    display: none;
+    font-size: 12px;
+    color: #dc3545;
+    margin-top: 5px;
+}
+
+.invalid-feedback.show {
+    display: block;
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545;
+}
+
+.form-control.is-valid {
+    border-color: #28a745;
+}
+
+@media (max-width: 768px) {
+    .register-container {
+        margin: 20px 15px;
+        padding: 30px 20px;
+    }
+    
+    .social-buttons {
+        flex-direction: column;
+    }
+}
+</style>
+
+@section scripts {
+    <script>
+    function togglePassword(fieldId, iconId) {
+        var passwordField = document.getElementById(fieldId);
+        var passwordIcon = document.getElementById(iconId);
+        
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            passwordIcon.className = 'fas fa-eye-slash';
+        } else {
+            passwordField.type = 'password';
+            passwordIcon.className = 'fas fa-eye';
+        }
+    }
+
+    // Password strength checker
+    function checkPasswordStrength(password) {
+        var strength = 0;
+        var feedback = '';
+        
+        if (password.length >= 8) strength += 1;
+        if (password.match(/[a-z]/)) strength += 1;
+        if (password.match(/[A-Z]/)) strength += 1;
+        if (password.match(/[0-9]/)) strength += 1;
+        if (password.match(/[^a-zA-Z0-9]/)) strength += 1;
+        
+        var strengthFill = document.querySelector('.strength-fill');
+        var strengthText = document.querySelector('.strength-text');
+        
+        switch(strength) {
+            case 0:
+            case 1:
+                strengthFill.style.width = '20%';
+                strengthFill.style.background = '#dc3545';
+                feedback = 'Rất yếu';
+                break;
+            case 2:
+                strengthFill.style.width = '40%';
+                strengthFill.style.background = '#fd7e14';
+                feedback = 'Yếu';
+                break;
+            case 3:
+                strengthFill.style.width = '60%';
+                strengthFill.style.background = '#ffc107';
+                feedback = 'Trung bình';
+                break;
+            case 4:
+                strengthFill.style.width = '80%';
+                strengthFill.style.background = '#20c997';
+                feedback = 'Mạnh';
+                break;
+            case 5:
+                strengthFill.style.width = '100%';
+                strengthFill.style.background = '#28a745';
+                feedback = 'Rất mạnh';
+                break;
+        }
+        
+        strengthText.textContent = 'Độ mạnh mật khẩu: ' + feedback;
+        return strength;
+    }
+
+    $(document).ready(function() {
+        // Password strength real-time check
+        $('#PasswordHash').on('input', function() {
+            checkPasswordStrength($(this).val());
+        });
+
+        // Form validation
+        $('.register-form').on('submit', function(e) {
+            var isValid = true;
+            
+            // Clear previous errors
+            $('.form-control').removeClass('is-invalid is-valid');
+            $('.invalid-feedback').removeClass('show');
+            
+            // Validate full name
+            var fullName = $('#FullName').val().trim();
+            if (fullName.length < 2) {
+                showError('FullName', 'Họ tên phải có ít nhất 2 ký tự');
+                isValid = false;
+            } else {
+                showSuccess('FullName');
+            }
+            
+            // Validate email
+            var email = $('#Email').val().trim();
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('Email', 'Email không hợp lệ');
+                isValid = false;
+            } else {
+                showSuccess('Email');
+            }
+            
+            // Validate password
+            var password = $('#PasswordHash').val();
+            if (password.length < 6) {
+                showError('PasswordHash', 'Mật khẩu phải có ít nhất 6 ký tự');
+                isValid = false;
+            } else {
+                showSuccess('PasswordHash');
+            }
+            
+            // Validate confirm password
+            var confirmPassword = $('#confirmPassword').val();
+            if (password !== confirmPassword) {
+                showError('confirmPassword', 'Mật khẩu xác nhận không khớp');
+                isValid = false;
+            } else {
+                showSuccess('confirmPassword');
+            }
+            
+            // Validate terms agreement
+            if (!$('#agreeTerms').is(':checked')) {
+                alert('Bạn phải đồng ý với điều khoản sử dụng!');
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Show loading state
+            $('.register-btn').html('<i class="fas fa-spinner fa-spin"></i> Đang đăng ký...');
+            $('.register-btn').prop('disabled', true);
+        });
+
+        function showError(fieldId, message) {
+            $('#' + fieldId).addClass('is-invalid');
+            $('#' + fieldId).siblings('.invalid-feedback').text(message).addClass('show');
+        }
+
+        function showSuccess(fieldId) {
+            $('#' + fieldId).addClass('is-valid');
+        }
+    });
+    </script>
 }

@@ -2,119 +2,250 @@
     ViewBag.Title = "Trang chủ";
 }
 
-<div class="jumbotron text-center">
-    <h1>Clothes Shop</h1>
-    <p class="lead">Mua sắm thời trang nhanh chóng và tiện lợi.</p>
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="hero-content fade-in-up">
+        <h1>Fashion Store</h1>
+        <p>Khám phá thời trang hiện đại, phong cách độc đáo</p>
+        <a href="@Url.Action("Index", "Products")" class="hero-btn">
+            <i class="fas fa-shopping-bag"></i> Mua sắm ngay
+        </a>
+    </div>
 </div>
 
+<!-- Categories Section -->
 <div class="container">
-    <h2 class="mb-4">Sản phẩm nổi bật</h2>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <img src="~/Content/images/tee1.jpg" class="card-img-top" alt="Áo thun cotton">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Áo thun cotton</h5>
-                    <p class="card-text text-danger fw-bold">150.000đ</p>
-                    <a href="@Url.Action("Details","Products", new { id = 1 })" class="btn btn-primary">Xem</a>
-                </div>
-            </div>
-        </div>
+    <div class="section-title">
+        <h2>Danh mục sản phẩm</h2>
+        <p>Lựa chọn từ những bộ sưu tập hot nhất hiện nay</p>
     </div>
 
-    <hr class="my-4" />
-
-    <h2 class="mb-4">Các sản phẩm khác</h2>
     <div class="row">
-        @* Sản phẩm 2 *@
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="~/Content/images/tee2.jpg" class="card-img-top" alt="Áo sơ mi nam">
+        <div class="col-md-3 col-sm-6">
+            <a href="@Url.Action("Index", "Products")" class="category-link">
+                <div class="category-card">
+                    <img src="https://images.unsplash.com/photo-1434389677669-e08b4cac3105?ixlib=rb-4.0.3&w=400" alt="Áo thun nam">
+                    <div class="category-overlay">
+                        <h3>Áo Nam</h3>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <a href="@Url.Action("Index", "Products")" class="category-link">
+                <div class="category-card">
+                    <img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?ixlib=rb-4.0.3&w=400" alt="Áo thun nữ">
+                    <div class="category-overlay">
+                        <h3>Áo Nữ</h3>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <a href="@Url.Action("Index", "Products")" class="category-link">
+                <div class="category-card">
+                    <img src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&w=400" alt="Quần">
+                    <div class="category-overlay">
+                        <h3>Quần</h3>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <a href="@Url.Action("Index", "Products")" class="category-link">
+                <div class="category-card">
+                    <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-4.0.3&w=400" alt="Giày dép">
+                    <div class="category-overlay">
+                        <h3>Giày Dép</h3>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Featured Products Section -->
+<div class="container" style="margin-top: 80px;">
+    <div class="section-title">
+        <h2>Sản phẩm nổi bật</h2>
+        <p>Những món đồ được yêu thích nhất trong tuần</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card fade-in-up">
+                <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&w=400" class="card-img-top" alt="Áo thun cotton">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Áo sơ mi nam</h5>
-                    <p class="card-text text-danger fw-bold">250.000đ</p>
-                    <a href="@Url.Action("Details","Products", new { id = 2 })" class="btn btn-outline-primary">Xem</a>
+                    <h5 class="card-title">Áo Thun Cotton Premium</h5>
+                    <p class="price">299.000đ</p>
+                    <a href="@Url.Action("Details","Products", new { id = 1 })" class="btn btn-outline-primary">
+                        <i class="fas fa-eye"></i> Xem chi tiết
+                    </a>
+                    <a href="@Url.Action("AddToCart","Cart", new { id = 1 })" class="btn btn-success">
+                        <i class="fas fa-cart-plus"></i> Thêm vào giỏ
+                    </a>
                 </div>
             </div>
         </div>
 
-        @* Sản phẩm 3 *@
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="~/Content/images/jean1.jpg" class="card-img-top" alt="Quần jean">
+        <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card fade-in-up">
+                <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&w=400" class="card-img-top" alt="Áo sơ mi">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Quần jean</h5>
-                    <p class="card-text text-danger fw-bold">400.000đ</p>
-                    <a href="@Url.Action("Details","Products", new { id = 3 })" class="btn btn-outline-primary">Xem</a>
+                    <h5 class="card-title">Áo Sơ Mi Công Sở</h5>
+                    <p class="price">459.000đ</p>
+                    <a href="@Url.Action("Details","Products", new { id = 2 })" class="btn btn-outline-primary">
+                        <i class="fas fa-eye"></i> Xem chi tiết
+                    </a>
+                    <a href="@Url.Action("AddToCart","Cart", new { id = 2 })" class="btn btn-success">
+                        <i class="fas fa-cart-plus"></i> Thêm vào giỏ
+                    </a>
                 </div>
             </div>
         </div>
 
-        @* Tương tự bạn thêm 6 sản phẩm nữa *@
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="~/Content/images/skirt1.jpg" class="card-img-top" alt="Chân váy">
+        <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card fade-in-up">
+                <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&w=400" class="card-img-top" alt="Quần jean">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Chân váy nữ</h5>
-                    <p class="card-text text-danger fw-bold">220.000đ</p>
-                    <a href="@Url.Action("Details","Products", new { id = 4 })" class="btn btn-outline-primary">Xem</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="~/Content/images/shoe1.jpg" class="card-img-top" alt="Giày sneaker">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Giày sneaker</h5>
-                    <p class="card-text text-danger fw-bold">600.000đ</p>
-                    <a href="@Url.Action("Details","Products", new { id = 5 })" class="btn btn-outline-primary">Xem</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="~/Content/images/bag1.jpg" class="card-img-top" alt="Túi xách nữ">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Túi xách nữ</h5>
-                    <p class="card-text text-danger fw-bold">550.000đ</p>
-                    <a href="@Url.Action("Details","Products", new { id = 6 })" class="btn btn-outline-primary">Xem</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="~/Content/images/jacket1.jpg" class="card-img-top" alt="Áo khoác da">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Áo khoác da</h5>
-                    <p class="card-text text-danger fw-bold">750.000đ</p>
-                    <a href="@Url.Action("Details","Products", new { id = 7 })" class="btn btn-outline-primary">Xem</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="~/Content/images/hat1.jpg" class="card-img-top" alt="Mũ lưỡi trai">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Mũ lưỡi trai</h5>
-                    <p class="card-text text-danger fw-bold">120.000đ</p>
-                    <a href="@Url.Action("Details","Products", new { id = 8 })" class="btn btn-outline-primary">Xem</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="~/Content/images/dress1.jpg" class="card-img-top" alt="Đầm dự tiệc">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Đầm dự tiệc</h5>
-                    <p class="card-text text-danger fw-bold">900.000đ</p>
-                    <a href="@Url.Action("Details","Products", new { id = 9 })" class="btn btn-outline-primary">Xem</a>
+                    <h5 class="card-title">Quần Jean Skinny</h5>
+                    <p class="price">699.000đ</p>
+                    <a href="@Url.Action("Details","Products", new { id = 3 })" class="btn btn-outline-primary">
+                        <i class="fas fa-eye"></i> Xem chi tiết
+                    </a>
+                    <a href="@Url.Action("AddToCart","Cart", new { id = 3 })" class="btn btn-success">
+                        <i class="fas fa-cart-plus"></i> Thêm vào giỏ
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Best Sellers Section -->
+<div class="container" style="margin-top: 80px;">
+    <div class="section-title">
+        <h2>Bán chạy nhất</h2>
+        <p>Top sản phẩm được khách hàng lựa chọn nhiều nhất</p>
+    </div>
+
+    <div class="product-grid">
+        <div class="card fade-in-up">
+            <img src="https://images.unsplash.com/photo-1583743814966-8936f37f4678?ixlib=rb-4.0.3&w=400" class="card-img-top" alt="Đầm dự tiệc">
+            <div class="card-body text-center">
+                <h5 class="card-title">Đầm Dự Tiệc Sang Trọng</h5>
+                <p class="price">1.299.000đ</p>
+                <a href="@Url.Action("Details","Products", new { id = 4 })" class="btn btn-outline-primary">
+                    <i class="fas fa-eye"></i> Xem
+                </a>
+                <a href="@Url.Action("AddToCart","Cart", new { id = 4 })" class="btn btn-success">
+                    <i class="fas fa-cart-plus"></i> Mua
+                </a>
+            </div>
+        </div>
+
+        <div class="card fade-in-up">
+            <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-4.0.3&w=400" class="card-img-top" alt="Giày sneaker">
+            <div class="card-body text-center">
+                <h5 class="card-title">Giày Sneaker Thể Thao</h5>
+                <p class="price">899.000đ</p>
+                <a href="@Url.Action("Details","Products", new { id = 5 })" class="btn btn-outline-primary">
+                    <i class="fas fa-eye"></i> Xem
+                </a>
+                <a href="@Url.Action("AddToCart","Cart", new { id = 5 })" class="btn btn-success">
+                    <i class="fas fa-cart-plus"></i> Mua
+                </a>
+            </div>
+        </div>
+
+        <div class="card fade-in-up">
+            <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?ixlib=rb-4.0.3&w=400" class="card-img-top" alt="Túi xách">
+            <div class="card-body text-center">
+                <h5 class="card-title">Túi Xách Da Thật</h5>
+                <p class="price">1.599.000đ</p>
+                <a href="@Url.Action("Details","Products", new { id = 6 })" class="btn btn-outline-primary">
+                    <i class="fas fa-eye"></i> Xem
+                </a>
+                <a href="@Url.Action("AddToCart","Cart", new { id = 6 })" class="btn btn-success">
+                    <i class="fas fa-cart-plus"></i> Mua
+                </a>
+            </div>
+        </div>
+
+        <div class="card fade-in-up">
+            <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&w=400" class="card-img-top" alt="Áo khoác">
+            <div class="card-body text-center">
+                <h5 class="card-title">Áo Khoác Bomber</h5>
+                <p class="price">799.000đ</p>
+                <a href="@Url.Action("Details","Products", new { id = 7 })" class="btn btn-outline-primary">
+                    <i class="fas fa-eye"></i> Xem
+                </a>
+                <a href="@Url.Action("AddToCart","Cart", new { id = 7 })" class="btn btn-success">
+                    <i class="fas fa-cart-plus"></i> Mua
+                </a>
+            </div>
+        </div>
+
+        <div class="card fade-in-up">
+            <img src="https://images.unsplash.com/photo-1544966503-7cc5ac882d5d?ixlib=rb-4.0.3&w=400" class="card-img-top" alt="Mũ">
+            <div class="card-body text-center">
+                <h5 class="card-title">Mũ Lưỡi Trai Streetwear</h5>
+                <p class="price">199.000đ</p>
+                <a href="@Url.Action("Details","Products", new { id = 8 })" class="btn btn-outline-primary">
+                    <i class="fas fa-eye"></i> Xem
+                </a>
+                <a href="@Url.Action("AddToCart","Cart", new { id = 8 })" class="btn btn-success">
+                    <i class="fas fa-cart-plus"></i> Mua
+                </a>
+            </div>
+        </div>
+
+        <div class="card fade-in-up">
+            <img src="https://images.unsplash.com/photo-1506629905607-98dfeb2f8c6d?ixlib=rb-4.0.3&w=400" class="card-img-top" alt="Chân váy">
+            <div class="card-body text-center">
+                <h5 class="card-title">Chân Váy Xếp Ly</h5>
+                <p class="price">399.000đ</p>
+                <a href="@Url.Action("Details","Products", new { id = 9 })" class="btn btn-outline-primary">
+                    <i class="fas fa-eye"></i> Xem
+                </a>
+                <a href="@Url.Action("AddToCart","Cart", new { id = 9 })" class="btn btn-success">
+                    <i class="fas fa-cart-plus"></i> Mua
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Newsletter Section -->
+<div class="container" style="margin-top: 80px; margin-bottom: 50px;">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="search-filter-section text-center">
+                <h3>Đăng ký nhận tin khuyến mãi</h3>
+                <p>Nhận thông báo về các sản phẩm mới và ưu đãi đặc biệt</p>
+                <div class="row">
+                    <div class="col-md-8">
+                        <input type="email" class="form-control search-box" placeholder="Nhập email của bạn...">
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-primary btn-block">
+                            <i class="fas fa-paper-plane"></i> Đăng ký
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.category-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.category-link:hover {
+    text-decoration: none;
+    color: inherit;
+}
+</style>

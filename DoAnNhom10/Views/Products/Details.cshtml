@@ -1,39 +1,277 @@
 ﻿@model DoAnNhom10.Models.Product
 
 @{
-    ViewBag.Title = "Chi tiết sản phẩm";
-
-    // Lấy ảnh đầu tiên từ bảng ProductImage
-    var firstImage = Model.ProductImages.FirstOrDefault();
-    var imgUrl = firstImage != null
-        ? Url.Content(firstImage.Url)   // dùng thuộc tính Url trong ProductImage
-        : Url.Content("~/Content/images/placeholder.png");
+    ViewBag.Title = Model != null ? Model.Name : "Chi tiết sản phẩm";
 }
 
-<div class="container mt-4">
-    <div class="row">
-        <!-- Ảnh sản phẩm -->
-        <div class="col-md-5">
-            <img src="@imgUrl" class="img-fluid rounded shadow-sm" alt="@Model.Name" />
+@if (Model == null)
+{
+    <div class="container">
+        <div class="alert alert-danger">
+            <h4>Sản phẩm không tồn tại!</h4>
+            <p>Sản phẩm bạn đang tìm kiếm không tồn tại hoặc đã bị xóa.</p>
+            <a href="@Url.Action("Index", "Products")" class="btn btn-primary">
+                <i class="fas fa-arrow-left"></i> Quay lại danh sách sản phẩm
+            </a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")">Trang chủ</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Products")">Sản phẩm</a>
+                </li>
+                <li class="breadcrumb-item active">@Model.Name</li>
+            </ol>
+        </nav>
+
+        <div class="row">
+            <!-- Product Images -->
+            <div class="col-lg-6">
+                <div class="product-images">
+                    @{
+                        var firstImage = Model.ProductImages != null && Model.ProductImages.Any() 
+                            ? Model.ProductImages.FirstOrDefault() 
+                            : null;
+                        var imgUrl = firstImage != null
+                            ? Url.Content(firstImage.Url)
+                            : "https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&w=600";
+                    }
+                    <div class="main-image">
+                        <img src="@imgUrl" class="img-fluid" alt="@Model.Name" id="mainImage" />
+                    </div>
+                    
+                    @if (Model.ProductImages != null && Model.ProductImages.Count() > 1)
+                    {
+                        <div class="thumbnail-images">
+                            @foreach (var image in Model.ProductImages.Take(4))
+                            {
+                                <img src="@Url.Content(image.Url)" 
+                                     alt="@Model.Name" 
+                                     class="thumbnail-img" 
+                                     onclick="changeMainImage('@Url.Content(image.Url)')" />
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="col-lg-6">
+                <div class="product-details">
+                    <h1 class="product-title">@Model.Name</h1>
+                    
+                    <div class="product-meta">
+                        @if (Model.Brand != null)
+                        {
+                            <span class="brand">
+                                <i class="fas fa-tag"></i> @Model.Brand.Name
+                            </span>
+                        }
+                        @if (Model.Category != null)
+                        {
+                            <span class="category">
+                                <i class="fas fa-th-large"></i> @Model.Category.Name
+                            </span>
+                        }
+                    </div>
+
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <span class="rating-text">(4.0/5 - 127 đánh giá)</span>
+                    </div>
+
+                    <div class="product-price">
+                        <span class="current-price">@Model.BasePrice.ToString("N0")đ</span>
+                        @if (Model.BasePrice > 500000)
+                        {
+                            <span class="original-price">@((Model.BasePrice * 1.2m).ToString("N0"))đ</span>
+                            <span class="discount-badge">Giảm 20%</span>
+                        }
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.Description))
+                    {
+                        <div class="product-description">
+                            <h5>Mô tả sản phẩm</h5>
+                            <p>@Model.Description</p>
+                        </div>
+                    }
+
+                    <!-- Product Features -->
+                    <div class="product-features">
+                        <div class="feature">
+                            <i class="fas fa-shipping-fast"></i>
+                            <span>Miễn phí vận chuyển cho đơn hàng trên 500.000đ</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-undo"></i>
+                            <span>Đổi trả miễn phí trong 7 ngày</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Bảo hành chính hãng</span>
+                        </div>
+                    </div>
+
+                    <!-- Add to Cart Section -->
+                    <div class="add-to-cart-section">
+                        <div class="quantity-selector">
+                            <label>Số lượng:</label>
+                            <div class="quantity-controls">
+                                <button type="button" class="qty-btn minus" onclick="decreaseQty()">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" id="quantity" value="1" min="1" max="10" readonly />
+                                <button type="button" class="qty-btn plus" onclick="increaseQty()">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-success btn-lg add-to-cart-btn" onclick="addToCart(@Model.ProductID)">
+                                <i class="fas fa-cart-plus"></i>
+                                <span>Thêm vào giỏ hàng</span>
+                            </button>
+                            <button class="btn btn-primary btn-lg buy-now-btn">
+                                <i class="fas fa-bolt"></i>
+                                <span>Mua ngay</span>
+                            </button>
+                        </div>
+
+                        <div class="wishlist-share">
+                            <button class="btn btn-outline-danger wishlist-btn">
+                                <i class="far fa-heart"></i> Yêu thích
+                            </button>
+                            <button class="btn btn-outline-info share-btn">
+                                <i class="fas fa-share-alt"></i> Chia sẻ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Thông tin sản phẩm -->
-        <div class="col-md-7">
-            <h2 class="mb-3">@Model.Name</h2>
-            <p class="text-muted">@Model.Brand.Name | @Model.Category.Name</p>
-            <h4 class="text-danger fw-bold">@Model.BasePrice.ToString("N0") đ</h4>
-
-            <p class="mt-3">@Model.Description</p>
-
-            <div class="mt-4">
-                <!-- Gọi đúng action AddToCart -->
-                <a href="@Url.Action("AddToCart", "Cart", new { id = Model.ProductID })" class="btn btn-success btn-lg">
-                    <i class="glyphicon glyphicon-shopping-cart"></i> Thêm vào giỏ hàng
-                </a>
-
-                <!-- Nút quay lại -->
-                <a href="@Url.Action("Index","Products")" class="btn btn-outline-secondary btn-lg">Quay lại</a>
+        <!-- Related Products -->
+        <div class="related-products mt-5">
+            <div class="section-title">
+                <h3>Sản phẩm liên quan</h3>
+            </div>
+            <div class="row">
+                <!-- Placeholder for related products -->
+                <div class="col-md-3">
+                    <div class="card">
+                        <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&w=300" class="card-img-top" alt="Related Product" />
+                        <div class="card-body text-center">
+                            <h6 class="card-title">Sản phẩm tương tự</h6>
+                            <p class="price">299.000đ</p>
+                            <a href="#" class="btn btn-outline-primary btn-sm">Xem</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
+}
+
+@section scripts {
+    <script>
+    function changeMainImage(imageSrc) {
+        document.getElementById('mainImage').src = imageSrc;
+        
+        // Update active thumbnail
+        document.querySelectorAll('.thumbnail-img').forEach(img => {
+            img.classList.remove('active');
+        });
+        event.target.classList.add('active');
+    }
+
+    function increaseQty() {
+        var input = document.getElementById('quantity');
+        var currentVal = parseInt(input.value);
+        if (currentVal < 10) {
+            input.value = currentVal + 1;
+        }
+    }
+
+    function decreaseQty() {
+        var input = document.getElementById('quantity');
+        var currentVal = parseInt(input.value);
+        if (currentVal > 1) {
+            input.value = currentVal - 1;
+        }
+    }
+
+    function addToCart(productId) {
+        var quantity = document.getElementById('quantity').value;
+        var btn = document.querySelector('.add-to-cart-btn');
+        var originalText = btn.innerHTML;
+        
+        // Show loading state
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Đang thêm...</span>';
+        btn.disabled = true;
+        
+        // Simulate adding to cart
+        setTimeout(function() {
+            btn.innerHTML = '<i class="fas fa-check"></i> <span>Đã thêm!</span>';
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-info');
+            
+            setTimeout(function() {
+                window.location.href = '@Url.Action("AddToCart", "Cart")?id=' + productId + '&qty=' + quantity;
+            }, 1000);
+        }, 500);
+    }
+
+    $(document).ready(function() {
+        // Initialize first thumbnail as active
+        $('.thumbnail-img').first().addClass('active');
+        
+        // Wishlist functionality
+        $('.wishlist-btn').on('click', function() {
+            var btn = $(this);
+            var icon = btn.find('i');
+            
+            if (icon.hasClass('far')) {
+                icon.removeClass('far').addClass('fas');
+                btn.removeClass('btn-outline-danger').addClass('btn-danger');
+                btn.html('<i class="fas fa-heart"></i> Đã thích');
+            } else {
+                icon.removeClass('fas').addClass('far');
+                btn.removeClass('btn-danger').addClass('btn-outline-danger');
+                btn.html('<i class="far fa-heart"></i> Yêu thích');
+            }
+        });
+        
+        // Share functionality
+        $('.share-btn').on('click', function() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '@Model.Name',
+                    text: 'Xem sản phẩm này tại Fashion Store',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback: copy URL to clipboard
+                navigator.clipboard.writeText(window.location.href).then(function() {
+                    alert('Đã sao chép link sản phẩm!');
+                });
+            }
+        });
+    });
+    </script>
+}

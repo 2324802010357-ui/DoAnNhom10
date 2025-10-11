@@ -4,30 +4,417 @@
     ViewBag.Title = "Danh sách sản phẩm";
 }
 
-<div class="container mt-4">
-    <h2 class="text-center mb-4">Sản phẩm nổi bật</h2>
+<div class="container">
+    <!-- Page Header -->
+    <div class="section-title">
+        <h2>Sản phẩm thời trang</h2>
+        <p>Khám phá bộ sưu tập đa dạng và phong cách</p>
+    </div>
 
-    <div class="row">
-        @foreach (var item in Model)
-        {
-            var firstImage = item.ProductImages.FirstOrDefault();
-            var imgUrl = firstImage != null
-                ? Url.Content(firstImage.Url)
-                : Url.Content("~/Content/images/placeholder.png");
-
-            <div class="col-md-3 col-sm-6 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <img src="@imgUrl" class="card-img-top" alt="@item.Name" style="height:200px; object-fit:cover;" />
-                    <div class="card-body text-center">
-                        <h5 class="card-title">@item.Name</h5>
-                        <p class="text-danger fw-bold">@item.BasePrice.ToString("N0") đ</p>
-                        <a href="@Url.Action("Details", "Products", new { id = item.ProductID })"
-                           class="btn btn-primary btn-sm">Xem chi tiết</a>
-                        <a href="@Url.Action("AddToCart", "Cart", new { id = item.ProductID })"
-                           class="btn btn-success btn-sm">Thêm vào giỏ</a>
+    <!-- Search and Filter Section -->
+    <div class="search-filter-section">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="search-form">
+                    <div class="input-group">
+                        <input type="text" class="form-control search-box" placeholder="Tìm kiếm sản phẩm..." id="searchInput">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
                     </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="sort-options">
+                    <select class="form-control" id="sortSelect">
+                        <option value="">Sắp xếp theo</option>
+                        <option value="name">Tên sản phẩm</option>
+                        <option value="price-asc">Giá: Thấp đến cao</option>
+                        <option value="price-desc">Giá: Cao đến thấp</option>
+                        <option value="newest">Mới nhất</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Tags -->
+        <div class="filter-tags">
+            <span class="filter-tag active" data-filter="all">Tất cả</span>
+            <span class="filter-tag" data-filter="ao">Áo</span>
+            <span class="filter-tag" data-filter="quan">Quần</span>
+            <span class="filter-tag" data-filter="giay">Giày</span>
+            <span class="filter-tag" data-filter="phu-kien">Phụ kiện</span>
+        </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="products-container">
+        @if (Model != null && Model.Any())
+        {
+            <div class="row" id="productsGrid">
+                @foreach (var product in Model)
+                {
+                    <div class="col-md-4 col-sm-6 mb-4 product-item" data-category="@(product.Category?.Name.ToLower() ?? "other")">
+                        <div class="card product-card fade-in-up">
+                            <div class="product-image-container">
+                                @{
+                                    var firstImage = product.ProductImages?.FirstOrDefault();
+                                    var imageUrl = firstImage != null 
+                                        ? Url.Content(firstImage.Url) 
+                                        : "https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&w=400";
+                                }
+                                <img src="@imageUrl" class="card-img-top" alt="@product.Name" />
+                                
+                                <!-- Product Badge -->
+                                @if (product.BasePrice > 1000000)
+                                {
+                                    <span class="product-badge premium">Premium</span>
+                                }
+                                else if (product.BasePrice < 500000)
+                                {
+                                    <span class="product-badge sale">Sale</span>
+                                }
+
+                                <!-- Hover Overlay -->
+                                <div class="product-overlay">
+                                    <a href="@Url.Action("Details", new { id = product.ProductID })" class="btn btn-outline-light btn-sm">
+                                        <i class="fas fa-eye"></i> Xem
+                                    </a>
+                                    <button class="btn btn-outline-light btn-sm" onclick="addToCartQuick(@product.ProductID)">
+                                        <i class="fas fa-cart-plus"></i> Mua
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="card-body text-center">
+                                <h5 class="card-title">@product.Name</h5>
+                                
+                                <!-- Product Meta -->
+                                <div class="product-meta">
+                                    @if (product.Brand != null)
+                                    {
+                                        <span class="brand-name">@product.Brand.Name</span>
+                                    }
+                                    @if (product.Category != null)
+                                    {
+                                        <span class="category-name">@product.Category.Name</span>
+                                    }
+                                </div>
+
+                                <!-- Product Rating -->
+                                <div class="product-rating">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <span class="rating-count">(4.0)</span>
+                                </div>
+
+                                <!-- Product Price -->
+                                <div class="product-price">
+                                    <span class="current-price">@product.BasePrice.ToString("N0")đ</span>
+                                    @if (product.BasePrice < 500000)
+                                    {
+                                        <span class="old-price">@((product.BasePrice * 1.2m).ToString("N0"))đ</span>
+                                    }
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="product-actions">
+                                    <a href="@Url.Action("Details", new { id = product.ProductID })" class="btn btn-outline-primary">
+                                        <i class="fas fa-eye"></i> Chi tiết
+                                    </a>
+                                    <a href="@Url.Action("AddToCart", "Cart", new { id = product.ProductID })" class="btn btn-success">
+                                        <i class="fas fa-cart-plus"></i> Thêm vào giỏ
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination-section">
+                <nav aria-label="Product pagination">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        }
+        else
+        {
+            <!-- No Products Found -->
+            <div class="empty-state">
+                <div class="text-center">
+                    <i class="fas fa-box-open fa-5x text-muted mb-4"></i>
+                    <h3>Không tìm thấy sản phẩm nào</h3>
+                    <p class="text-muted">Hiện tại chưa có sản phẩm nào trong danh mục này.</p>
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-primary">
+                        <i class="fas fa-home"></i> Về trang chủ
+                    </a>
                 </div>
             </div>
         }
     </div>
 </div>
+
+@section scripts {
+    <script>
+    function addToCartQuick(productId) {
+        // Show loading effect
+        event.preventDefault();
+        var btn = event.target.closest('button');
+        var originalText = btn.innerHTML;
+        
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        btn.disabled = true;
+        
+        // Simulate adding to cart
+        setTimeout(function() {
+            window.location.href = '@Url.Action("AddToCart", "Cart")?id=' + productId;
+        }, 500);
+    }
+
+    $(document).ready(function() {
+        // Search functionality
+        $('#searchInput').on('keyup', function() {
+            var searchTerm = $(this).val().toLowerCase();
+            filterProducts();
+        });
+
+        // Sort functionality
+        $('#sortSelect').on('change', function() {
+            var sortBy = $(this).val();
+            sortProducts(sortBy);
+        });
+
+        // Filter functionality
+        $('.filter-tag').on('click', function() {
+            $('.filter-tag').removeClass('active');
+            $(this).addClass('active');
+            filterProducts();
+        });
+
+        function filterProducts() {
+            var searchTerm = $('#searchInput').val().toLowerCase();
+            var activeFilter = $('.filter-tag.active').data('filter');
+            
+            $('.product-item').each(function() {
+                var productName = $(this).find('.card-title').text().toLowerCase();
+                var productCategory = $(this).data('category');
+                
+                var matchesSearch = productName.includes(searchTerm);
+                var matchesFilter = activeFilter === 'all' || productCategory.includes(activeFilter);
+                
+                if (matchesSearch && matchesFilter) {
+                    $(this).fadeIn();
+                } else {
+                    $(this).fadeOut();
+                }
+            });
+        }
+
+        function sortProducts(sortBy) {
+            var $container = $('#productsGrid');
+            var $products = $('.product-item');
+            
+            $products.sort(function(a, b) {
+                switch(sortBy) {
+                    case 'name':
+                        return $(a).find('.card-title').text() > $(b).find('.card-title').text() ? 1 : -1;
+                    case 'price-asc':
+                        var priceA = parseInt($(a).find('.current-price').text().replace(/[^\d]/g, ''));
+                        var priceB = parseInt($(b).find('.current-price').text().replace(/[^\d]/g, ''));
+                        return priceA - priceB;
+                    case 'price-desc':
+                        var priceA = parseInt($(a).find('.current-price').text().replace(/[^\d]/g, ''));
+                        var priceB = parseInt($(b).find('.current-price').text().replace(/[^\d]/g, ''));
+                        return priceB - priceA;
+                    default:
+                        return 0;
+                }
+            });
+            
+            $container.append($products);
+        }
+
+        // Add to favorites functionality
+        $('.btn-outline-light').on('click', function(e) {
+            if ($(this).find('.fa-heart').length > 0) {
+                e.preventDefault();
+                var icon = $(this).find('i');
+                if (icon.hasClass('far')) {
+                    icon.removeClass('far').addClass('fas');
+                    $(this).addClass('favorited');
+                } else {
+                    icon.removeClass('fas').addClass('far');
+                    $(this).removeClass('favorited');
+                }
+            }
+        });
+    });
+    </script>
+
+    <style>
+    .product-card {
+        transition: all 0.3s ease;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .product-image-container {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .product-image-container img {
+        height: 250px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .product-card:hover .product-image-container img {
+        transform: scale(1.1);
+    }
+
+    .product-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+
+    .product-card:hover .product-overlay {
+        opacity: 1;
+    }
+
+    .product-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: 5px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: bold;
+        color: white;
+        z-index: 2;
+    }
+
+    .product-badge.premium {
+        background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+    }
+
+    .product-badge.sale {
+        background: linear-gradient(45deg, #56ab2f, #a8e6cf);
+    }
+
+    .product-meta {
+        margin: 10px 0;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .brand-name, .category-name {
+        margin-right: 10px;
+    }
+
+    .product-rating {
+        margin: 10px 0;
+        font-size: 14px;
+    }
+
+    .stars {
+        color: #ffc107;
+    }
+
+    .rating-count {
+        color: #666;
+        margin-left: 5px;
+    }
+
+    .product-price {
+        margin: 15px 0;
+    }
+
+    .current-price {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #e74c3c;
+    }
+
+    .old-price {
+        font-size: 1rem;
+        color: #999;
+        text-decoration: line-through;
+        margin-left: 8px;
+    }
+
+    .product-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .product-actions .btn {
+        flex: 1;
+        max-width: 120px;
+    }
+
+    .pagination-section {
+        margin-top: 50px;
+    }
+
+    .pagination .page-link {
+        border-radius: 50%;
+        margin: 0 5px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    @media (max-width: 768px) {
+        .product-actions {
+            flex-direction: column;
+        }
+        
+        .product-actions .btn {
+            max-width: none;
+        }
+    }
+    </style>
+}

@@ -3,22 +3,280 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Đăng nhập</h2>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="login-container">
+                <div class="login-header text-center mb-4">
+                    <i class="fas fa-user-circle fa-3x text-primary mb-3"></i>
+                    <h2>Đăng nhập</h2>
+                    <p class="text-muted">Chào mừng bạn quay trở lại!</p>
+                </div>
 
-@if (ViewBag.Error != null)
-{
-    <div class="alert alert-danger">@ViewBag.Error</div>
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <i class="fas fa-exclamation-circle"></i> @ViewBag.Error
+                        <button type="button" class="close" data-dismiss="alert">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+                }
+
+                @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "login-form" }))
+                {
+                    <div class="form-group">
+                        <label for="email">
+                            <i class="fas fa-envelope"></i> Email
+                        </label>
+                        <input type="email" 
+                               name="email" 
+                               id="email"
+                               class="form-control search-box" 
+                               placeholder="Nhập địa chỉ email của bạn"
+                               required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">
+                            <i class="fas fa-lock"></i> Mật khẩu
+                        </label>
+                        <div class="password-input-container">
+                            <input type="password" 
+                                   name="password" 
+                                   id="password"
+                                   class="form-control search-box" 
+                                   placeholder="Nhập mật khẩu"
+                                   required />
+                            <button type="button" class="password-toggle" onclick="togglePassword()">
+                                <i class="fas fa-eye" id="passwordIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input type="checkbox" class="form-check-input" id="rememberMe">
+                        <label class="form-check-label" for="rememberMe">
+                            Ghi nhớ đăng nhập
+                        </label>
+                        <a href="#" class="forgot-password float-right">Quên mật khẩu?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block btn-lg login-btn">
+                        <i class="fas fa-sign-in-alt"></i> Đăng nhập
+                    </button>
+                }
+
+                <div class="login-footer text-center mt-4">
+                    <p class="text-muted">Chưa có tài khoản?</p>
+                    <a href="@Url.Action("Register", "Account")" class="btn btn-outline-success">
+                        <i class="fas fa-user-plus"></i> Đăng ký ngay
+                    </a>
+                </div>
+
+                <!-- Social Login -->
+                <div class="social-login mt-4">
+                    <div class="divider">
+                        <span>hoặc đăng nhập với</span>
+                    </div>
+                    <div class="social-buttons">
+                        <button class="btn btn-social btn-facebook">
+                            <i class="fab fa-facebook-f"></i> Facebook
+                        </button>
+                        <button class="btn btn-social btn-google">
+                            <i class="fab fa-google"></i> Google
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.login-container {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-top: 30px;
 }
 
-@using (Html.BeginForm("Login", "Account", FormMethod.Post))
-{
-    <div class="form-group">
-        <label>Email</label>
-        <input type="email" name="email" class="form-control" required />
-    </div>
-    <div class="form-group">
-        <label>Mật khẩu</label>
-        <input type="password" name="password" class="form-control" required />
-    </div>
-    <button type="submit" class="btn btn-primary">Đăng nhập</button>
+.login-header i {
+    color: #667eea;
+}
+
+.login-header h2 {
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.form-group label i {
+    margin-right: 8px;
+    color: #667eea;
+}
+
+.password-input-container {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+    font-size: 14px;
+}
+
+.password-toggle:hover {
+    color: #667eea;
+}
+
+.form-check-label {
+    font-size: 14px;
+    color: #666;
+}
+
+.forgot-password {
+    font-size: 14px;
+    color: #667eea;
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.login-btn {
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.login-footer {
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.social-login {
+    text-align: center;
+}
+
+.divider {
+    position: relative;
+    margin: 20px 0;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #eee;
+}
+
+.divider span {
+    background: white;
+    padding: 0 20px;
+    color: #999;
+    font-size: 14px;
+}
+
+.social-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn-social {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-facebook {
+    background: #3b5998;
+    color: white;
+    border: none;
+}
+
+.btn-facebook:hover {
+    background: #2d4373;
+    color: white;
+}
+
+.btn-google {
+    background: #db4437;
+    color: white;
+    border: none;
+}
+
+.btn-google:hover {
+    background: #c23321;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .login-container {
+        margin: 20px 15px;
+        padding: 30px 20px;
+    }
+    
+    .social-buttons {
+        flex-direction: column;
+    }
+}
+</style>
+
+@section scripts {
+    <script>
+    function togglePassword() {
+        var passwordField = document.getElementById('password');
+        var passwordIcon = document.getElementById('passwordIcon');
+        
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            passwordIcon.className = 'fas fa-eye-slash';
+        } else {
+            passwordField.type = 'password';
+            passwordIcon.className = 'fas fa-eye';
+        }
+    }
+
+    // Form validation
+    $(document).ready(function() {
+        $('.login-form').on('submit', function(e) {
+            var email = $('#email').val().trim();
+            var password = $('#password').val().trim();
+            
+            if (!email || !password) {
+                e.preventDefault();
+                alert('Vui lòng điền đầy đủ thông tin!');
+                return false;
+            }
+            
+            // Show loading state
+            $('.login-btn').html('<i class="fas fa-spinner fa-spin"></i> Đang đăng nhập...');
+            $('.login-btn').prop('disabled', true);
+        });
+    });
+    </script>
 }
