@@ -59,8 +59,8 @@
                                 </div>
                                 <div class="col-md-2">
                                     <div class="quantity-controls">
-                                        <div class="quantity-input-group">
-                                            <button type="button" class="quantity-btn minus" onclick="changeQuantity(@item.ProductID, -1)">
+                                        <div class="quantity-input-group" id="qty-group-@item.ProductID">
+                                            <button type="button" class="quantity-btn minus" onclick="changeQuantity(@item.ProductID, @(item.Quantity - 1))">
                                                 <i class="fas fa-minus"></i>
                                             </button>
                                             <input type="number" 
@@ -69,9 +69,8 @@
                                                    max="99" 
                                                    class="quantity-input" 
                                                    id="qty-@item.ProductID"
-                                                   onchange="updateQuantityManual(@item.ProductID, this.value)"
-                                                   onkeyup="updateQuantityManual(@item.ProductID, this.value)" />
-                                            <button type="button" class="quantity-btn plus" onclick="changeQuantity(@item.ProductID, 1)">
+                                                   onchange="changeQuantity(@item.ProductID, this.value)" />
+                                            <button type="button" class="quantity-btn plus" onclick="changeQuantity(@item.ProductID, @(item.Quantity + 1))">
                                                 <i class="fas fa-plus"></i>
                                             </button>
                                         </div>
@@ -125,12 +124,13 @@
                         </span>
                     </div>
 
-                    <div id="shipping-notice" style="@(total < 500000 && total > 0 ? "" : "display: none;")">
+                    @if (total < 500000 && total > 0)
+                    {
                         <div class="shipping-notice">
                             <i class="fas fa-info-circle"></i>
-                            Mua thêm <strong><span id="remaining-amount">@((500000 - total).ToString("N0"))</span>đ</strong> để được miễn phí vận chuyển!
+                            Mua thêm <strong>@((500000 - total).ToString("N0"))đ</strong> để được miễn phí vận chuyển!
                         </div>
-                    </div>
+                    }
                     
                     <div class="summary-divider"></div>
                     
@@ -195,198 +195,133 @@
     }
 </div>
 
+<!-- Hidden forms for cart updates -->
+@foreach (var item in Model ?? new List<DoAnNhom10.Models.CartItem>())
+{
+    using (Html.BeginForm("Update", "Cart", FormMethod.Post, new { id = "form-update-" + item.ProductID, style = "display: none;" }))
+    {
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@item.ProductID" />
+        <input type="hidden" name="qty" id="hidden-qty-@item.ProductID" value="@item.Quantity" />
+    }
+}
+
 @section scripts {
     <script>
-    // Global variables for cart management
-    var cartUpdateTimeout;
-    var cartData = [];
-
-    // Initialize cart data
-    @foreach (var item in Model ?? new List<DoAnNhom10.Models.CartItem>())
-    {
-        <text>
-        cartData.push({
-            productId: @item.ProductID,
-            quantity: @item.Quantity,
-            price: @item.Price
-        });
-        </text>
-    }
-
-    function changeQuantity(productId, change) {
-        var input = document.getElementById('qty-' + productId);
-        var currentVal = parseInt(input.value);
-        var newVal = currentVal + change;
+    var isUpdating = false; // Prevent multiple simultaneous updates
+    
+    function changeQuantity(productId, newQuantity) {
+        // Prevent multiple updates
+        if (isUpdating) {
+            return false;
+        }
         
-        if (newVal < 1) newVal = 1;
-        if (newVal > 99) newVal = 99;
-        
-        input.value = newVal;
-        updateQuantityReal(productId, newVal);
-    }
-
-    function updateQuantityManual(productId, newQuantity) {
-        // Clear previous timeout
-        clearTimeout(cartUpdateTimeout);
-        
-        // Validate input
+        // Validate quantity
         var qty = parseInt(newQuantity);
-        if (isNaN(qty) || qty < 1) qty = 1;
-        if (qty > 99) qty = 99;
+        if (isNaN(qty) || qty < 1) {
+            qty = 1;
+        }
+        if (qty > 99) {
+            qty = 99;
+        }
         
-        // Update input value if corrected
-        document.getElementById('qty-' + productId).value = qty;
+        // Update UI immediately
+        var input = document.getElementById('qty-' + productId);
+        var qtyGroup = document.getElementById('qty-group-' + productId);
+        var hiddenInput = document.getElementById('hidden-qty-' + productId);
         
-        // Set timeout to update after user stops typing
-        cartUpdateTimeout = setTimeout(function() {
-            updateQuantityReal(productId, qty);
-        }, 800); // Wait 800ms after user stops typing
+        input.value = qty;
+        hiddenInput.value = qty;
+        
+        // Show loading state with simple effect
+        qtyGroup.style.opacity = '0.6';
+        qtyGroup.style.pointerEvents = 'none';
+        isUpdating = true;
+        
+        // Add loading indicator
+        var loadingIcon = document.createElement('div');
+        loadingIcon.className = 'loading-overlay';
+        loadingIcon.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i>';
+        qtyGroup.style.position = 'relative';
+        qtyGroup.appendChild(loadingIcon);
+        
+        // Update local calculation immediately for better UX
+        updateLocalCalculation(productId, qty);
+        
+        // Submit form after short delay for better UX
+        setTimeout(function() {
+            var form = document.getElementById('form-update-' + productId);
+            if (form) {
+                form.submit();
+            } else {
+                // Fallback: reload page
+                window.location.reload();
+            }
+        }, 300);
+        
+        return false;
     }
-
-    function updateQuantityReal(productId, newQuantity) {
-        // Show loading state
+    
+    function updateLocalCalculation(productId, newQuantity) {
         var cartItem = document.getElementById('cart-item-' + productId);
-        var qtyInput = document.getElementById('qty-' + productId);
-        var totalElement = document.getElementById('total-' + productId);
-        
-        // Add loading class
-        cartItem.classList.add('updating');
-        qtyInput.disabled = true;
-        
-        // Calculate new total for this item
         var price = parseFloat(cartItem.dataset.price);
         var newTotal = price * newQuantity;
         
-        // Update display immediately for better UX
-        totalElement.textContent = newTotal.toLocaleString() + 'đ';
-        
-        // Update cart data
-        var cartItem_data = cartData.find(item => item.productId === productId);
-        if (cartItem_data) {
-            cartItem_data.quantity = newQuantity;
+        // Update item total
+        var totalElement = document.getElementById('total-' + productId);
+        if (totalElement) {
+            totalElement.textContent = newTotal.toLocaleString() + 'đ';
         }
         
-        // Update cart summary immediately
-        updateCartSummary();
-        
-        // Send AJAX request to server
-        $.ajax({
-            url: '@Url.Action("UpdateQuantityAjax", "Cart")',
-            method: 'POST',
-            data: {
-                id: productId,
-                qty: newQuantity,
-                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-            },
-            success: function(response) {
-                if (response.success) {
-                    // Update was successful
-                    console.log('Quantity updated successfully');
-                    
-                    // Update navbar cart badge
-                    updateCartBadge();
-                } else {
-                    // Handle error
-                    console.error('Failed to update quantity');
-                    alert('Có lỗi xảy ra khi cập nhật số lượng!');
-                    location.reload(); // Reload page on error
-                }
-            },
-            error: function() {
-                console.error('AJAX request failed');
-                // Fallback to traditional form submission
-                updateQuantityFallback(productId, newQuantity);
-            },
-            complete: function() {
-                // Remove loading state
-                cartItem.classList.remove('updating');
-                qtyInput.disabled = false;
-            }
-        });
+        // Update cart summary (rough calculation)
+        updateCartSummaryLocal();
     }
-
-    function updateQuantityFallback(productId, newQuantity) {
-        // Fallback method using form submission
-        var form = $('<form>', {
-            method: 'POST',
-            action: '@Url.Action("Update", "Cart")'
-        });
-        
-        form.append($('<input>', {
-            type: 'hidden',
-            name: 'id',
-            value: productId
-        }));
-        
-        form.append($('<input>', {
-            type: 'hidden',
-            name: 'qty',
-            value: newQuantity
-        }));
-        
-        // Add anti-forgery token
-        form.append($('@Html.AntiForgeryToken()'));
-        
-        $('body').append(form);
-        form.submit();
-    }
-
-    function updateCartSummary() {
+    
+    function updateCartSummaryLocal() {
         var totalQuantity = 0;
         var subtotal = 0;
         
-        // Calculate totals from cart data
-        cartData.forEach(function(item) {
-            totalQuantity += item.quantity;
-            subtotal += item.price * item.quantity;
+        // Calculate from all quantity inputs
+        document.querySelectorAll('.quantity-input').forEach(function(input) {
+            var productId = input.id.replace('qty-', '');
+            var cartItem = document.getElementById('cart-item-' + productId);
+            var price = parseFloat(cartItem.dataset.price);
+            var quantity = parseInt(input.value) || 0;
+            
+            totalQuantity += quantity;
+            subtotal += price * quantity;
         });
         
-        // Update summary display
-        document.getElementById('cart-count').textContent = totalQuantity;
-        document.getElementById('summary-count').textContent = totalQuantity;
-        document.getElementById('summary-subtotal').textContent = subtotal.toLocaleString() + 'đ';
+        // Update display
+        var cartCountElement = document.getElementById('cart-count');
+        var summaryCountElement = document.getElementById('summary-count');
+        var summarySubtotalElement = document.getElementById('summary-subtotal');
+        var finalTotalElement = document.getElementById('final-total');
         
-        // Calculate shipping
+        if (cartCountElement) cartCountElement.textContent = totalQuantity;
+        if (summaryCountElement) summaryCountElement.textContent = totalQuantity;
+        if (summarySubtotalElement) summarySubtotalElement.textContent = subtotal.toLocaleString() + 'đ';
+        
+        // Calculate shipping and final total
         var shippingFee = subtotal >= 500000 ? 0 : 30000;
         var finalTotal = subtotal + shippingFee;
         
-        // Update shipping display
+        if (finalTotalElement) finalTotalElement.textContent = finalTotal.toLocaleString() + 'đ';
+        
+        // Update shipping fee display
         var shippingElement = document.getElementById('shipping-fee');
-        if (shippingFee === 0) {
-            shippingElement.innerHTML = '<span>Miễn phí</span>';
-        } else {
-            shippingElement.innerHTML = '<span>' + shippingFee.toLocaleString() + 'đ</span>';
-        }
-        
-        // Update shipping notice
-        var shippingNotice = document.getElementById('shipping-notice');
-        if (subtotal < 500000 && subtotal > 0) {
-            var remaining = 500000 - subtotal;
-            document.getElementById('remaining-amount').textContent = remaining.toLocaleString();
-            shippingNotice.style.display = 'block';
-        } else {
-            shippingNotice.style.display = 'none';
-        }
-        
-        // Update final total
-        document.getElementById('final-total').textContent = finalTotal.toLocaleString() + 'đ';
-    }
-
-    function updateCartBadge() {
-        // Update navbar cart badge
-        var totalQuantity = cartData.reduce(function(sum, item) {
-            return sum + item.quantity;
-        }, 0);
-        
-        var badge = document.querySelector('.cart-badge');
-        if (badge) {
-            badge.textContent = totalQuantity;
-            if (totalQuantity > 0) {
-                badge.classList.add('cart-badge-active');
-                setTimeout(function() {
-                    badge.classList.remove('cart-badge-active');
-                }, 500);
+        if (shippingElement) {
+            if (shippingFee === 0) {
+                shippingElement.innerHTML = '<span>Miễn phí</span>';
+            } else {
+                shippingElement.innerHTML = '<span>' + shippingFee.toLocaleString() + 'đ</span>';
             }
+        }
+        
+        // Update navbar cart badge if exists
+        var cartBadge = document.querySelector('.cart-badge');
+        if (cartBadge) {
+            cartBadge.textContent = totalQuantity;
         }
     }
 
@@ -394,14 +329,12 @@
         if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
             var cartItem = document.getElementById('cart-item-' + productId);
             
+            // Add fade out effect
             cartItem.style.transition = 'all 0.3s ease';
             cartItem.style.opacity = '0.5';
             cartItem.style.transform = 'translateX(-20px)';
             
             setTimeout(function() {
-                // Remove from cart data
-                cartData = cartData.filter(item => item.productId !== productId);
-                
                 // Submit remove form
                 var form = $('<form>', {
                     method: 'POST',
@@ -439,14 +372,6 @@
 
     // Document ready
     $(document).ready(function() {
-        // Add anti-forgery token for AJAX requests
-        $.ajaxSetup({
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader('RequestVerificationToken', 
-                    $('input[name="__RequestVerificationToken"]').val());
-            }
-        });
-
         // Show success/error messages
         @if (TempData["SuccessMessage"] != null)
         {
@@ -465,6 +390,17 @@
             }, 100);
             </text>
         }
+        
+        // Handle quantity input validation
+        $('.quantity-input').on('input', function() {
+            var value = parseInt(this.value);
+            if (isNaN(value) || value < 1) {
+                this.value = 1;
+            }
+            if (value > 99) {
+                this.value = 99;
+            }
+        });
     });
 
     function showNotification(message, type) {
@@ -486,6 +422,28 @@
         }, 5000);
     }
     </script>
+
+    <style>
+    .loading-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        color: #667eea;
+    }
+    
+    .quantity-input-group {
+        position: relative;
+    }
+    </style>
 
     @Html.AntiForgeryToken()
 }
