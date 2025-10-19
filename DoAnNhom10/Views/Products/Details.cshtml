@@ -95,11 +95,11 @@ else
                     </div>
 
                     <div class="product-price">
-                        <span class="current-price">@Model.BasePrice.ToString("N0")đ</span>
-                        @if (Model.BasePrice > 500000)
+                        <span class="current-price">@String.Format("{0:N0}đ", Model.BasePrice ?? 0)</span>
+
+                        @if ((Model.BasePrice ?? 0) > 500000)
                         {
-                            <span class="original-price">@((Model.BasePrice * 1.2m).ToString("N0"))đ</span>
-                            <span class="discount-badge">Giảm 20%</span>
+                            <span class="old-price">@String.Format("{0:N0}đ", (Model.BasePrice ?? 0) * 1.2m)</span>
                         }
                     </div>
 

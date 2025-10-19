@@ -13,10 +13,10 @@ namespace DoAnNhom10.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class ShopQuanAoNhom10Entities : DbContext
+    public partial class ShopFashion2025Entities : DbContext
     {
-        public ShopQuanAoNhom10Entities()
-            : base("name=ShopQuanAoNhom10Entities")
+        public ShopFashion2025Entities()
+            : base("name=ShopFashion2025Entities")
         {
         }
     

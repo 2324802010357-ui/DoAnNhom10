@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "Danh sách sản phẩm";
+    var featured = ViewBag.Featured as List<DoAnNhom10.Models.Product>;
+    var bestSellers = ViewBag.BestSellers as List<DoAnNhom10.Models.Product>;
 }
 
 <div class="container">
@@ -41,240 +43,184 @@
 
         <!-- Filter Tags -->
         <div class="filter-tags">
-            <span class="filter-tag active" data-filter="all">Tất cả</span>
-            <span class="filter-tag" data-filter="ao">Áo</span>
-            <span class="filter-tag" data-filter="quan">Quần</span>
-            <span class="filter-tag" data-filter="giay">Giày</span>
-            <span class="filter-tag" data-filter="phu-kien">Phụ kiện</span>
+            <a class="filter-tag @(Request["category"] == null ? "active" : "")" href="@Url.Action("Index", "Products")">Tất cả</a>
+            <a class="filter-tag @(Request["category"] == "ao" ? "active" : "")" href="@Url.Action("Index", "Products", new { category = "ao" })">Áo</a>
+            <a class="filter-tag @(Request["category"] == "quan" ? "active" : "")" href="@Url.Action("Index", "Products", new { category = "quan" })">Quần</a>
+            <a class="filter-tag @(Request["category"] == "giay" ? "active" : "")" href="@Url.Action("Index", "Products", new { category = "giay" })">Giày</a>
         </div>
-    </div>
 
-    <!-- Products Grid -->
-    <div class="products-container">
-        @if (Model != null && Model.Any())
-        {
-            <div class="row" id="productsGrid">
-                @foreach (var product in Model)
-                {
-                    <div class="col-md-4 col-sm-6 mb-4 product-item" data-category="@(product.Category?.Name.ToLower() ?? "other")">
-                        <div class="card product-card fade-in-up">
-                            <div class="product-image-container">
-                                @{
-                                    var firstImage = product.ProductImages?.FirstOrDefault();
-                                    var imageUrl = firstImage != null 
-                                        ? Url.Content(firstImage.Url) 
-                                        : "https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&w=400";
-                                }
-                                <img src="@imageUrl" class="card-img-top" alt="@product.Name" />
-                                
-                                <!-- Product Badge -->
-                                @if (product.BasePrice > 1000000)
-                                {
-                                    <span class="product-badge premium">Premium</span>
-                                }
-                                else if (product.BasePrice < 500000)
-                                {
-                                    <span class="product-badge sale">Sale</span>
-                                }
-
-                                <!-- Hover Overlay -->
-                                <div class="product-overlay">
-                                    <a href="@Url.Action("Details", new { id = product.ProductID })" class="btn btn-outline-light btn-sm">
-                                        <i class="fas fa-eye"></i> Xem
-                                    </a>
-                                    <button class="btn btn-outline-light btn-sm" onclick="addToCartQuick(@product.ProductID)">
-                                        <i class="fas fa-cart-plus"></i> Mua
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="card-body text-center">
-                                <h5 class="card-title">@product.Name</h5>
-                                
-                                <!-- Product Meta -->
-                                <div class="product-meta">
-                                    @if (product.Brand != null)
-                                    {
-                                        <span class="brand-name">@product.Brand.Name</span>
+        <!-- Products Grid -->
+        <div class="products-container">
+            @if (Model != null && Model.Any())
+            {
+                <div class="row" id="productsGrid">
+                    @foreach (var product in Model)
+                    {
+                        <div class="col-md-4 col-sm-6 mb-4 product-item" data-category="@(product.Category?.Name.ToLower() ?? "other")">
+                            <div class="card product-card fade-in-up">
+                                <div class="product-image-container">
+                                    @{
+                                        var firstImage = product.ProductImages?.FirstOrDefault();
+                                        var imageUrl = firstImage != null
+                                            ? firstImage.Url
+                                            : "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400";
                                     }
-                                    @if (product.Category != null)
-                                    {
-                                        <span class="category-name">@product.Category.Name</span>
-                                    }
-                                </div>
+                                    <img src="@imageUrl" class="card-img-top" alt="@product.Name"
+                                         style="object-fit:cover;height:250px;border-radius:10px;" />
 
-                                <!-- Product Rating -->
-                                <div class="product-rating">
-                                    <div class="stars">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="far fa-star"></i>
+                                    <!-- Product Badge -->
+                                    @if (product.BasePrice > 1000000)
+                                    {
+                                        <span class="product-badge premium">Premium</span>
+                                    }
+                                    else if (product.BasePrice < 500000)
+                                    {
+                                        <span class="product-badge sale">Sale</span>
+                                    }
+
+                                    <!-- Hover Overlay -->
+                                    <div class="product-overlay">
+                                        <a href="@Url.Action("Details", new { id = product.ProductID })" class="btn btn-outline-light btn-sm">
+                                            <i class="fas fa-eye"></i> Xem
+                                        </a>
+                                        <button class="btn btn-outline-light btn-sm" onclick="addToCartQuick(@product.ProductID)">
+                                            <i class="fas fa-cart-plus"></i> Mua
+                                        </button>
                                     </div>
-                                    <span class="rating-count">(4.0)</span>
                                 </div>
 
-                                <!-- Product Price -->
-                                <div class="product-price">
-                                    <span class="current-price">@product.BasePrice.ToString("N0")đ</span>
-                                    @if (product.BasePrice < 500000)
-                                    {
-                                        <span class="old-price">@((product.BasePrice * 1.2m).ToString("N0"))đ</span>
-                                    }
-                                </div>
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">@product.Name</h5>
 
-                                <!-- Action Buttons -->
-                                <div class="product-actions">
-                                    <a href="@Url.Action("Details", new { id = product.ProductID })" class="btn btn-outline-primary">
-                                        <i class="fas fa-eye"></i> Chi tiết
-                                    </a>
-                                    <a href="@Url.Action("AddToCart", "Cart", new { id = product.ProductID })" class="btn btn-success">
-                                        <i class="fas fa-cart-plus"></i> Thêm vào giỏ
-                                    </a>
+                                    <!-- Product Meta -->
+                                    <div class="product-meta">
+                                        @if (product.Brand != null)
+                                        {
+                                            <span class="brand-name">@product.Brand.Name</span>
+                                        }
+                                        @if (product.Category != null)
+                                        {
+                                            <span class="category-name">@product.Category.Name</span>
+                                        }
+                                    </div>
+
+                                    <!-- Product Rating -->
+                                    <div class="product-rating">
+                                        <div class="stars">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                        </div>
+                                        <span class="rating-count">(4.0)</span>
+                                    </div>
+
+                                    <!-- Product Price -->
+                                    <div class="product-price">
+                                        <span class="current-price">
+                                            @String.Format("{0:N0}đ", product.BasePrice ?? 0)
+                                        </span>
+
+                                        @if (product.BasePrice < 500000)
+                                        {
+                                            <span class="old-price">
+                                                @String.Format("{0:N0}đ", (product.BasePrice ?? 0) * 1.2m)
+                                            </span>
+                                        }
+                                    </div>
+
+                                    <!-- Action Buttons -->
+                                    <div class="product-actions">
+                                        <a href="@Url.Action("Details", new { id = product.ProductID })" class="btn btn-outline-primary">
+                                            <i class="fas fa-eye"></i> Chi tiết
+                                        </a>
+                                        <a href="@Url.Action("AddToCart", "Cart", new { id = product.ProductID })" class="btn btn-success">
+                                            <i class="fas fa-cart-plus"></i> Thêm vào giỏ
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                }
-            </div>
-
-            <!-- Pagination -->
-            <div class="pagination-section">
-                <nav aria-label="Product pagination">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        }
-        else
-        {
-            <!-- No Products Found -->
-            <div class="empty-state">
-                <div class="text-center">
-                    <i class="fas fa-box-open fa-5x text-muted mb-4"></i>
-                    <h3>Không tìm thấy sản phẩm nào</h3>
-                    <p class="text-muted">Hiện tại chưa có sản phẩm nào trong danh mục này.</p>
-                    <a href="@Url.Action("Index", "Home")" class="btn btn-primary">
-                        <i class="fas fa-home"></i> Về trang chủ
-                    </a>
+                    }
                 </div>
-            </div>
-        }
+            }
+            else
+            {
+                <!-- No Products Found -->
+                <div class="empty-state">
+                    <div class="text-center">
+                        <i class="fas fa-box-open fa-5x text-muted mb-4"></i>
+                        <h3>Không tìm thấy sản phẩm nào</h3>
+                        <p class="text-muted">Hiện tại chưa có sản phẩm nào trong danh mục này.</p>
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-primary">
+                            <i class="fas fa-home"></i> Về trang chủ
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 </div>
 
 @section scripts {
+    <!-- Thêm thư viện jQuery và jQuery UI cho autocomplete -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+
     <script>
-    function addToCartQuick(productId) {
-        // Show loading effect
-        event.preventDefault();
-        var btn = event.target.closest('button');
-        var originalText = btn.innerHTML;
-        
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-        btn.disabled = true;
-        
-        // Simulate adding to cart
-        setTimeout(function() {
-            window.location.href = '@Url.Action("AddToCart", "Cart")?id=' + productId;
-        }, 500);
-    }
+        // 🛒 Nút "Thêm vào giỏ"
+        function addToCartQuick(productId) {
+            event.preventDefault();
+            var btn = event.target.closest('button');
+            var originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            btn.disabled = true;
 
-    $(document).ready(function() {
-        // Search functionality
-        $('#searchInput').on('keyup', function() {
-            var searchTerm = $(this).val().toLowerCase();
-            filterProducts();
-        });
-
-        // Sort functionality
-        $('#sortSelect').on('change', function() {
-            var sortBy = $(this).val();
-            sortProducts(sortBy);
-        });
-
-        // Filter functionality
-        $('.filter-tag').on('click', function() {
-            $('.filter-tag').removeClass('active');
-            $(this).addClass('active');
-            filterProducts();
-        });
-
-        function filterProducts() {
-            var searchTerm = $('#searchInput').val().toLowerCase();
-            var activeFilter = $('.filter-tag.active').data('filter');
-            
-            $('.product-item').each(function() {
-                var productName = $(this).find('.card-title').text().toLowerCase();
-                var productCategory = $(this).data('category');
-                
-                var matchesSearch = productName.includes(searchTerm);
-                var matchesFilter = activeFilter === 'all' || productCategory.includes(activeFilter);
-                
-                if (matchesSearch && matchesFilter) {
-                    $(this).fadeIn();
-                } else {
-                    $(this).fadeOut();
-                }
-            });
+            setTimeout(function () {
+                window.location.href = '@Url.Action("AddToCart", "Cart")?id=' + productId;
+            }, 500);
         }
 
-        function sortProducts(sortBy) {
-            var $container = $('#productsGrid');
-            var $products = $('.product-item');
-            
-            $products.sort(function(a, b) {
-                switch(sortBy) {
-                    case 'name':
-                        return $(a).find('.card-title').text() > $(b).find('.card-title').text() ? 1 : -1;
-                    case 'price-asc':
-                        var priceA = parseInt($(a).find('.current-price').text().replace(/[^\d]/g, ''));
-                        var priceB = parseInt($(b).find('.current-price').text().replace(/[^\d]/g, ''));
-                        return priceA - priceB;
-                    case 'price-desc':
-                        var priceA = parseInt($(a).find('.current-price').text().replace(/[^\d]/g, ''));
-                        var priceB = parseInt($(b).find('.current-price').text().replace(/[^\d]/g, ''));
-                        return priceB - priceA;
-                    default:
-                        return 0;
-                }
-            });
-            
-            $container.append($products);
-        }
-
-        // Add to favorites functionality
-        $('.btn-outline-light').on('click', function(e) {
-            if ($(this).find('.fa-heart').length > 0) {
-                e.preventDefault();
-                var icon = $(this).find('i');
-                if (icon.hasClass('far')) {
-                    icon.removeClass('far').addClass('fas');
-                    $(this).addClass('favorited');
-                } else {
-                    icon.removeClass('fas').addClass('far');
-                    $(this).removeClass('favorited');
-                }
+        // 🔄 Kích hoạt sắp xếp tự động
+        document.addEventListener("DOMContentLoaded", function () {
+            var sortSelect = document.getElementById("sortSelect");
+            if (sortSelect) {
+                sortSelect.addEventListener("change", function () {
+                    var sortValue = this.value;
+                    var url = new URL(window.location.href);
+                    url.searchParams.set("sort", sortValue);
+                    window.location.href = url.toString();
+                });
             }
         });
-    });
-    </script>
 
-    <style>
+        // 🔍 Gợi ý tìm kiếm sản phẩm theo danh mục
+        $(function () {
+    var currentCategory = new URL(window.location.href).searchParams.get("category");
+
+    $("#searchInput").autocomplete({
+        minLength: 1,
+        source: function (request, response) {
+            $.ajax({
+                url: '@Url.Action("SearchSuggestions", "Products")',
+                data: { term: request.term, category: currentCategory },
+                success: function (data) {
+                    response(data);
+                }
+            });
+        },
+        select: function (event, ui) {
+            window.location.href = '@Url.Action("Index", "Products")?search=' + encodeURIComponent(ui.item.value);
+        }
+    });
+});
+
+    </script>
+}
+
+<style>
     .product-card {
         transition: all 0.3s ease;
         height: 100%;
@@ -282,21 +228,22 @@
         overflow: hidden;
     }
 
-    .product-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
 
     .product-image-container {
         position: relative;
         overflow: hidden;
     }
 
-    .product-image-container img {
-        height: 250px;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-    }
+        .product-image-container img {
+            height: 250px;
+            width: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
 
     .product-card:hover .product-image-container img {
         transform: scale(1.1);
@@ -308,7 +255,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0,0,0,0.7);
+        background: rgba(0,0,0,0.6);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -333,13 +280,13 @@
         z-index: 2;
     }
 
-    .product-badge.premium {
-        background: linear-gradient(45deg, #ff6b6b, #ee5a52);
-    }
+        .product-badge.premium {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+        }
 
-    .product-badge.sale {
-        background: linear-gradient(45deg, #56ab2f, #a8e6cf);
-    }
+        .product-badge.sale {
+            background: linear-gradient(45deg, #56ab2f, #a8e6cf);
+        }
 
     .product-meta {
         margin: 10px 0;
@@ -349,20 +296,6 @@
 
     .brand-name, .category-name {
         margin-right: 10px;
-    }
-
-    .product-rating {
-        margin: 10px 0;
-        font-size: 14px;
-    }
-
-    .stars {
-        color: #ffc107;
-    }
-
-    .rating-count {
-        color: #666;
-        margin-left: 5px;
     }
 
     .product-price {
@@ -388,33 +321,8 @@
         justify-content: center;
     }
 
-    .product-actions .btn {
-        flex: 1;
-        max-width: 120px;
-    }
-
-    .pagination-section {
-        margin-top: 50px;
-    }
-
-    .pagination .page-link {
-        border-radius: 50%;
-        margin: 0 5px;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    @media (max-width: 768px) {
-        .product-actions {
-            flex-direction: column;
-        }
-        
         .product-actions .btn {
-            max-width: none;
+            flex: 1;
+            max-width: 120px;
         }
-    }
-    </style>
-}
+</style>

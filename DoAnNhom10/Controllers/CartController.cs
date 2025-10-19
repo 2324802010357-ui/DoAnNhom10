@@ -9,7 +9,7 @@ namespace DoAnNhom10.Controllers
 {
     public class CartController : Controller
     {
-        private ShopQuanAoNhom10Entities db = new ShopQuanAoNhom10Entities();
+        private ShopFashion2025Entities db = new ShopFashion2025Entities();
 
         private List<CartItem> Cart
         {
@@ -34,37 +34,59 @@ namespace DoAnNhom10.Controllers
 
         // ✅ Thêm sản phẩm vào giỏ hàng (cho phép GET từ nút bấm)
         [HttpGet]
-        public ActionResult AddToCart(int id, int qty = 1)
+        public ActionResult AddToCart(int id, string returnUrl)
         {
             var product = db.Products.Find(id);
-            if (product == null) return HttpNotFound();
-
-            var cart = Cart;
-            var item = cart.FirstOrDefault(x => x.ProductID == id);
-            if (item == null)
+            if (product != null)
             {
-                // Tìm hình ảnh đầu tiên của sản phẩm
-                var firstImage = product.ProductImages.FirstOrDefault();
-                var imageUrl = firstImage != null ? firstImage.Url : "~/Content/images/placeholder.png";
-
-                cart.Add(new CartItem
+                List<CartItem> cart = Session["CART"] as List<CartItem>;
+                if (cart == null)
                 {
-                    ProductID = product.ProductID,
-                    ProductName = product.Name,
-                    Price = product.BasePrice,
-                    Quantity = qty,
-                    ImageUrl = imageUrl
-                });
-            }
-            else
-            {
-                item.Quantity += qty;
-            }
-            Cart = cart;
+                    cart = new List<CartItem>();
+                }
 
-            TempData["SuccessMessage"] = $"Đã thêm {product.Name} vào giỏ hàng!";
-            return RedirectToAction("Index");
+                var existingItem = cart.FirstOrDefault(x => x.ProductID == id);
+                if (existingItem != null)
+                {
+                    existingItem.Quantity++;
+                }
+                else
+                {
+                    // ✅ Lấy ảnh mặc định
+                    var image = db.ProductImages.FirstOrDefault(i => i.ProductID == product.ProductID && i.IsDefault == true);
+
+                    cart.Add(new CartItem
+                    {
+                        ProductID = product.ProductID,
+                        ProductName = product.Name,
+                        Price = (decimal)product.BasePrice,
+                        ImageUrl = image != null ? image.Url : "/Images/no-image.png",
+                        Quantity = 1
+                    });
+                }
+
+                Session["CART"] = cart;
+            }
+
+            // ✅ Không chuyển qua giỏ hàng — ở lại trang hiện tại
+            if (!string.IsNullOrEmpty(returnUrl))
+                return Redirect(returnUrl);
+
+            return RedirectToAction("Index", "Products");
         }
+
+
+        public ActionResult ClearAfterPayment()
+        {
+            // Xóa giỏ hàng
+            Session["CART"] = null;
+
+            // Hiển thị thông báo thành công ở trang chủ
+            TempData["SuccessMessage"] = "Thanh toán thành công! Cảm ơn bạn đã mua sắm tại Fashion Store 💜";
+
+            return RedirectToAction("Index", "Home");
+        }
+
 
         // ✅ Cập nhật số lượng (Traditional POST)
         [HttpPost]

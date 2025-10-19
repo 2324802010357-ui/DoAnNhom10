@@ -4,14 +4,13 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="ShopQuanAoNhom10Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ShopFashion2025Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Brands">
           <Key>
             <PropertyRef Name="BrandID" />
           </Key>
           <Property Name="BrandID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="Slug" Type="nvarchar" MaxLength="150" />
         </EntityType>
         <EntityType Name="Categories">
           <Key>
@@ -19,7 +18,7 @@
           </Key>
           <Property Name="CategoryID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="Slug" Type="nvarchar" MaxLength="150" />
+          <Property Name="Slug" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="OrderItems">
           <Key>
@@ -61,11 +60,14 @@
             <PropertyRef Name="ProductID" />
           </Key>
           <Property Name="ProductID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="150" />
           <Property Name="Description" Type="nvarchar" MaxLength="1000" />
-          <Property Name="BasePrice" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="BasePrice" Type="decimal" Precision="18" Scale="2" />
           <Property Name="CategoryID" Type="int" />
           <Property Name="BrandID" Type="int" />
+          <Property Name="Featured" Type="bit" />
+          <Property Name="BestSeller" Type="bit" />
+          <Property Name="Gender" Type="nvarchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="ProductVariants">
           <Key>
@@ -83,13 +85,13 @@
             <PropertyRef Name="UserID" />
           </Key>
           <Property Name="UserID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="FullName" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="Email" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="PasswordHash" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="FullName" Type="nvarchar" MaxLength="100" />
+          <Property Name="Email" Type="nvarchar" MaxLength="100" />
+          <Property Name="PasswordHash" Type="nvarchar" MaxLength="255" />
           <Property Name="Role" Type="nvarchar" MaxLength="20" />
           <Property Name="CreatedAt" Type="datetime" />
         </EntityType>
-        <Association Name="FK__OrderItem__Order__4F7CD00D">
+        <Association Name="FK__OrderItem__Order__5165187F">
           <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
           <End Role="OrderItems" Type="Self.OrderItems" Multiplicity="*" />
           <ReferentialConstraint>
@@ -101,7 +103,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__OrderItem__Produ__5070F446">
+        <Association Name="FK__OrderItem__Produ__52593CB8">
           <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
           <End Role="OrderItems" Type="Self.OrderItems" Multiplicity="*" />
           <ReferentialConstraint>
@@ -113,7 +115,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__OrderItem__Varia__5165187F">
+        <Association Name="FK__OrderItem__Varia__534D60F1">
           <End Role="ProductVariants" Type="Self.ProductVariants" Multiplicity="0..1" />
           <End Role="OrderItems" Type="Self.OrderItems" Multiplicity="*" />
           <ReferentialConstraint>
@@ -125,7 +127,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Orders__UserID__4AB81AF0">
+        <Association Name="FK__Orders__UserID__4CA06362">
           <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
           <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
           <ReferentialConstraint>
@@ -137,7 +139,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ProductIm__Produ__46E78A0C">
+        <Association Name="FK__ProductIm__Produ__48CFD27E">
           <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
           <End Role="ProductImages" Type="Self.ProductImages" Multiplicity="*" />
           <ReferentialConstraint>
@@ -173,7 +175,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ProductVa__Produ__440B1D61">
+        <Association Name="FK__ProductVa__Produ__45F365D3">
           <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
           <End Role="ProductVariants" Type="Self.ProductVariants" Multiplicity="*" />
           <ReferentialConstraint>
@@ -185,7 +187,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="ShopQuanAoNhom10ModelStoreContainer">
+        <EntityContainer Name="ShopFashion2025ModelStoreContainer">
           <EntitySet Name="Brands" EntityType="Self.Brands" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Categories" EntityType="Self.Categories" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderItems" EntityType="Self.OrderItems" Schema="dbo" store:Type="Tables" />
@@ -194,23 +196,23 @@
           <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductVariants" EntityType="Self.ProductVariants" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__OrderItem__Order__4F7CD00D" Association="Self.FK__OrderItem__Order__4F7CD00D">
+          <AssociationSet Name="FK__OrderItem__Order__5165187F" Association="Self.FK__OrderItem__Order__5165187F">
             <End Role="Orders" EntitySet="Orders" />
             <End Role="OrderItems" EntitySet="OrderItems" />
           </AssociationSet>
-          <AssociationSet Name="FK__OrderItem__Produ__5070F446" Association="Self.FK__OrderItem__Produ__5070F446">
+          <AssociationSet Name="FK__OrderItem__Produ__52593CB8" Association="Self.FK__OrderItem__Produ__52593CB8">
             <End Role="Products" EntitySet="Products" />
             <End Role="OrderItems" EntitySet="OrderItems" />
           </AssociationSet>
-          <AssociationSet Name="FK__OrderItem__Varia__5165187F" Association="Self.FK__OrderItem__Varia__5165187F">
+          <AssociationSet Name="FK__OrderItem__Varia__534D60F1" Association="Self.FK__OrderItem__Varia__534D60F1">
             <End Role="ProductVariants" EntitySet="ProductVariants" />
             <End Role="OrderItems" EntitySet="OrderItems" />
           </AssociationSet>
-          <AssociationSet Name="FK__Orders__UserID__4AB81AF0" Association="Self.FK__Orders__UserID__4AB81AF0">
+          <AssociationSet Name="FK__Orders__UserID__4CA06362" Association="Self.FK__Orders__UserID__4CA06362">
             <End Role="Users" EntitySet="Users" />
             <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
-          <AssociationSet Name="FK__ProductIm__Produ__46E78A0C" Association="Self.FK__ProductIm__Produ__46E78A0C">
+          <AssociationSet Name="FK__ProductIm__Produ__48CFD27E" Association="Self.FK__ProductIm__Produ__48CFD27E">
             <End Role="Products" EntitySet="Products" />
             <End Role="ProductImages" EntitySet="ProductImages" />
           </AssociationSet>
@@ -222,7 +224,7 @@
             <End Role="Categories" EntitySet="Categories" />
             <End Role="Products" EntitySet="Products" />
           </AssociationSet>
-          <AssociationSet Name="FK__ProductVa__Produ__440B1D61" Association="Self.FK__ProductVa__Produ__440B1D61">
+          <AssociationSet Name="FK__ProductVa__Produ__45F365D3" Association="Self.FK__ProductVa__Produ__45F365D3">
             <End Role="Products" EntitySet="Products" />
             <End Role="ProductVariants" EntitySet="ProductVariants" />
           </AssociationSet>
@@ -230,14 +232,13 @@
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="ShopQuanAoNhom10Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="ShopFashion2025Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Brand">
           <Key>
             <PropertyRef Name="BrandID" />
           </Key>
           <Property Name="BrandID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Slug" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Products" Relationship="Self.FK__Products__BrandI__412EB0B6" FromRole="Brands" ToRole="Products" />
         </EntityType>
         <EntityType Name="Category">
@@ -246,7 +247,7 @@
           </Key>
           <Property Name="CategoryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Slug" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Slug" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Products" Relationship="Self.FK__Products__Catego__403A8C7D" FromRole="Categories" ToRole="Products" />
         </EntityType>
         <EntityType Name="OrderItem">
@@ -260,9 +261,9 @@
           <Property Name="Quantity" Type="Int32" Nullable="false" />
           <Property Name="UnitPrice" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="LineTotal" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
-          <NavigationProperty Name="Order" Relationship="Self.FK__OrderItem__Order__4F7CD00D" FromRole="OrderItems" ToRole="Orders" />
-          <NavigationProperty Name="Product" Relationship="Self.FK__OrderItem__Produ__5070F446" FromRole="OrderItems" ToRole="Products" />
-          <NavigationProperty Name="ProductVariant" Relationship="Self.FK__OrderItem__Varia__5165187F" FromRole="OrderItems" ToRole="ProductVariants" />
+          <NavigationProperty Name="Order" Relationship="Self.FK__OrderItem__Order__5165187F" FromRole="OrderItems" ToRole="Orders" />
+          <NavigationProperty Name="Product" Relationship="Self.FK__OrderItem__Produ__52593CB8" FromRole="OrderItems" ToRole="Products" />
+          <NavigationProperty Name="ProductVariant" Relationship="Self.FK__OrderItem__Varia__534D60F1" FromRole="OrderItems" ToRole="ProductVariants" />
         </EntityType>
         <EntityType Name="Order">
           <Key>
@@ -277,8 +278,8 @@
           <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="TotalAmount" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="OrderDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="OrderItems" Relationship="Self.FK__OrderItem__Order__4F7CD00D" FromRole="Orders" ToRole="OrderItems" />
-          <NavigationProperty Name="User" Relationship="Self.FK__Orders__UserID__4AB81AF0" FromRole="Orders" ToRole="Users" />
+          <NavigationProperty Name="OrderItems" Relationship="Self.FK__OrderItem__Order__5165187F" FromRole="Orders" ToRole="OrderItems" />
+          <NavigationProperty Name="User" Relationship="Self.FK__Orders__UserID__4CA06362" FromRole="Orders" ToRole="Users" />
         </EntityType>
         <EntityType Name="ProductImage">
           <Key>
@@ -288,23 +289,26 @@
           <Property Name="ProductID" Type="Int32" />
           <Property Name="Url" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="IsDefault" Type="Boolean" />
-          <NavigationProperty Name="Product" Relationship="Self.FK__ProductIm__Produ__46E78A0C" FromRole="ProductImages" ToRole="Products" />
+          <NavigationProperty Name="Product" Relationship="Self.FK__ProductIm__Produ__48CFD27E" FromRole="ProductImages" ToRole="Products" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
             <PropertyRef Name="ProductID" />
           </Key>
           <Property Name="ProductID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Name="BasePrice" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="BasePrice" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="CategoryID" Type="Int32" />
           <Property Name="BrandID" Type="Int32" />
+          <Property Name="Featured" Type="Boolean" />
+          <Property Name="BestSeller" Type="Boolean" />
           <NavigationProperty Name="Brand" Relationship="Self.FK__Products__BrandI__412EB0B6" FromRole="Products" ToRole="Brands" />
           <NavigationProperty Name="Category" Relationship="Self.FK__Products__Catego__403A8C7D" FromRole="Products" ToRole="Categories" />
-          <NavigationProperty Name="OrderItems" Relationship="Self.FK__OrderItem__Produ__5070F446" FromRole="Products" ToRole="OrderItems" />
-          <NavigationProperty Name="ProductImages" Relationship="Self.FK__ProductIm__Produ__46E78A0C" FromRole="Products" ToRole="ProductImages" />
-          <NavigationProperty Name="ProductVariants" Relationship="Self.FK__ProductVa__Produ__440B1D61" FromRole="Products" ToRole="ProductVariants" />
+          <NavigationProperty Name="OrderItems" Relationship="Self.FK__OrderItem__Produ__52593CB8" FromRole="Products" ToRole="OrderItems" />
+          <NavigationProperty Name="ProductImages" Relationship="Self.FK__ProductIm__Produ__48CFD27E" FromRole="Products" ToRole="ProductImages" />
+          <NavigationProperty Name="ProductVariants" Relationship="Self.FK__ProductVa__Produ__45F365D3" FromRole="Products" ToRole="ProductVariants" />
+          <Property Name="Gender" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="ProductVariant">
           <Key>
@@ -316,20 +320,20 @@
           <Property Name="Color" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Price" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="Stock" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="OrderItems" Relationship="Self.FK__OrderItem__Varia__5165187F" FromRole="ProductVariants" ToRole="OrderItems" />
-          <NavigationProperty Name="Product" Relationship="Self.FK__ProductVa__Produ__440B1D61" FromRole="ProductVariants" ToRole="Products" />
+          <NavigationProperty Name="OrderItems" Relationship="Self.FK__OrderItem__Varia__534D60F1" FromRole="ProductVariants" ToRole="OrderItems" />
+          <NavigationProperty Name="Product" Relationship="Self.FK__ProductVa__Produ__45F365D3" FromRole="ProductVariants" ToRole="Products" />
         </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="UserID" />
           </Key>
           <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FullName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="PasswordHash" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FullName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordHash" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Role" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="CreatedAt" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Orders" Relationship="Self.FK__Orders__UserID__4AB81AF0" FromRole="Users" ToRole="Orders" />
+          <NavigationProperty Name="Orders" Relationship="Self.FK__Orders__UserID__4CA06362" FromRole="Users" ToRole="Orders" />
         </EntityType>
         <Association Name="FK__Products__BrandI__412EB0B6">
           <End Role="Brands" Type="Self.Brand" Multiplicity="0..1" />
@@ -355,7 +359,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__OrderItem__Order__4F7CD00D">
+        <Association Name="FK__OrderItem__Order__5165187F">
           <End Role="Orders" Type="Self.Order" Multiplicity="0..1" />
           <End Role="OrderItems" Type="Self.OrderItem" Multiplicity="*" />
           <ReferentialConstraint>
@@ -367,7 +371,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__OrderItem__Produ__5070F446">
+        <Association Name="FK__OrderItem__Produ__52593CB8">
           <End Role="Products" Type="Self.Product" Multiplicity="0..1" />
           <End Role="OrderItems" Type="Self.OrderItem" Multiplicity="*" />
           <ReferentialConstraint>
@@ -379,7 +383,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__OrderItem__Varia__5165187F">
+        <Association Name="FK__OrderItem__Varia__534D60F1">
           <End Role="ProductVariants" Type="Self.ProductVariant" Multiplicity="0..1" />
           <End Role="OrderItems" Type="Self.OrderItem" Multiplicity="*" />
           <ReferentialConstraint>
@@ -391,7 +395,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Orders__UserID__4AB81AF0">
+        <Association Name="FK__Orders__UserID__4CA06362">
           <End Role="Users" Type="Self.User" Multiplicity="0..1" />
           <End Role="Orders" Type="Self.Order" Multiplicity="*" />
           <ReferentialConstraint>
@@ -403,7 +407,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ProductIm__Produ__46E78A0C">
+        <Association Name="FK__ProductIm__Produ__48CFD27E">
           <End Role="Products" Type="Self.Product" Multiplicity="0..1" />
           <End Role="ProductImages" Type="Self.ProductImage" Multiplicity="*" />
           <ReferentialConstraint>
@@ -415,7 +419,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ProductVa__Produ__440B1D61">
+        <Association Name="FK__ProductVa__Produ__45F365D3">
           <End Role="Products" Type="Self.Product" Multiplicity="0..1" />
           <End Role="ProductVariants" Type="Self.ProductVariant" Multiplicity="*" />
           <ReferentialConstraint>
@@ -427,7 +431,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="ShopQuanAoNhom10Entities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="ShopFashion2025Entities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Brands" EntityType="Self.Brand" />
           <EntitySet Name="Categories" EntityType="Self.Category" />
           <EntitySet Name="OrderItems" EntityType="Self.OrderItem" />
@@ -444,27 +448,27 @@
             <End Role="Categories" EntitySet="Categories" />
             <End Role="Products" EntitySet="Products" />
           </AssociationSet>
-          <AssociationSet Name="FK__OrderItem__Order__4F7CD00D" Association="Self.FK__OrderItem__Order__4F7CD00D">
+          <AssociationSet Name="FK__OrderItem__Order__5165187F" Association="Self.FK__OrderItem__Order__5165187F">
             <End Role="Orders" EntitySet="Orders" />
             <End Role="OrderItems" EntitySet="OrderItems" />
           </AssociationSet>
-          <AssociationSet Name="FK__OrderItem__Produ__5070F446" Association="Self.FK__OrderItem__Produ__5070F446">
+          <AssociationSet Name="FK__OrderItem__Produ__52593CB8" Association="Self.FK__OrderItem__Produ__52593CB8">
             <End Role="Products" EntitySet="Products" />
             <End Role="OrderItems" EntitySet="OrderItems" />
           </AssociationSet>
-          <AssociationSet Name="FK__OrderItem__Varia__5165187F" Association="Self.FK__OrderItem__Varia__5165187F">
+          <AssociationSet Name="FK__OrderItem__Varia__534D60F1" Association="Self.FK__OrderItem__Varia__534D60F1">
             <End Role="ProductVariants" EntitySet="ProductVariants" />
             <End Role="OrderItems" EntitySet="OrderItems" />
           </AssociationSet>
-          <AssociationSet Name="FK__Orders__UserID__4AB81AF0" Association="Self.FK__Orders__UserID__4AB81AF0">
+          <AssociationSet Name="FK__Orders__UserID__4CA06362" Association="Self.FK__Orders__UserID__4CA06362">
             <End Role="Users" EntitySet="Users" />
             <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
-          <AssociationSet Name="FK__ProductIm__Produ__46E78A0C" Association="Self.FK__ProductIm__Produ__46E78A0C">
+          <AssociationSet Name="FK__ProductIm__Produ__48CFD27E" Association="Self.FK__ProductIm__Produ__48CFD27E">
             <End Role="Products" EntitySet="Products" />
             <End Role="ProductImages" EntitySet="ProductImages" />
           </AssociationSet>
-          <AssociationSet Name="FK__ProductVa__Produ__440B1D61" Association="Self.FK__ProductVa__Produ__440B1D61">
+          <AssociationSet Name="FK__ProductVa__Produ__45F365D3" Association="Self.FK__ProductVa__Produ__45F365D3">
             <End Role="Products" EntitySet="Products" />
             <End Role="ProductVariants" EntitySet="ProductVariants" />
           </AssociationSet>
@@ -474,18 +478,17 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="ShopQuanAoNhom10ModelStoreContainer" CdmEntityContainer="ShopQuanAoNhom10Entities">
+        <EntityContainerMapping StorageEntityContainer="ShopFashion2025ModelStoreContainer" CdmEntityContainer="ShopFashion2025Entities">
           <EntitySetMapping Name="Brands">
-            <EntityTypeMapping TypeName="ShopQuanAoNhom10Model.Brand">
+            <EntityTypeMapping TypeName="ShopFashion2025Model.Brand">
               <MappingFragment StoreEntitySet="Brands">
                 <ScalarProperty Name="BrandID" ColumnName="BrandID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Slug" ColumnName="Slug" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Categories">
-            <EntityTypeMapping TypeName="ShopQuanAoNhom10Model.Category">
+            <EntityTypeMapping TypeName="ShopFashion2025Model.Category">
               <MappingFragment StoreEntitySet="Categories">
                 <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -494,7 +497,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="OrderItems">
-            <EntityTypeMapping TypeName="ShopQuanAoNhom10Model.OrderItem">
+            <EntityTypeMapping TypeName="ShopFashion2025Model.OrderItem">
               <MappingFragment StoreEntitySet="OrderItems">
                 <ScalarProperty Name="OrderItemID" ColumnName="OrderItemID" />
                 <ScalarProperty Name="OrderID" ColumnName="OrderID" />
@@ -507,7 +510,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Orders">
-            <EntityTypeMapping TypeName="ShopQuanAoNhom10Model.Order">
+            <EntityTypeMapping TypeName="ShopFashion2025Model.Order">
               <MappingFragment StoreEntitySet="Orders">
                 <ScalarProperty Name="OrderID" ColumnName="OrderID" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
@@ -522,7 +525,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ProductImages">
-            <EntityTypeMapping TypeName="ShopQuanAoNhom10Model.ProductImage">
+            <EntityTypeMapping TypeName="ShopFashion2025Model.ProductImage">
               <MappingFragment StoreEntitySet="ProductImages">
                 <ScalarProperty Name="ImageID" ColumnName="ImageID" />
                 <ScalarProperty Name="ProductID" ColumnName="ProductID" />
@@ -532,19 +535,22 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Products">
-            <EntityTypeMapping TypeName="ShopQuanAoNhom10Model.Product">
+            <EntityTypeMapping TypeName="ShopFashion2025Model.Product">
               <MappingFragment StoreEntitySet="Products">
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
                 <ScalarProperty Name="ProductID" ColumnName="ProductID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="BasePrice" ColumnName="BasePrice" />
                 <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
                 <ScalarProperty Name="BrandID" ColumnName="BrandID" />
+                <ScalarProperty Name="Featured" ColumnName="Featured" />
+                <ScalarProperty Name="BestSeller" ColumnName="BestSeller" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ProductVariants">
-            <EntityTypeMapping TypeName="ShopQuanAoNhom10Model.ProductVariant">
+            <EntityTypeMapping TypeName="ShopFashion2025Model.ProductVariant">
               <MappingFragment StoreEntitySet="ProductVariants">
                 <ScalarProperty Name="VariantID" ColumnName="VariantID" />
                 <ScalarProperty Name="ProductID" ColumnName="ProductID" />
@@ -556,7 +562,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="ShopQuanAoNhom10Model.User">
+            <EntityTypeMapping TypeName="ShopFashion2025Model.User">
               <MappingFragment StoreEntitySet="Users">
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="FullName" ColumnName="FullName" />

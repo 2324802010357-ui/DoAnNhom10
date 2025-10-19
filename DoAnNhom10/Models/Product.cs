@@ -25,9 +25,12 @@ namespace DoAnNhom10.Models
         public int ProductID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public decimal BasePrice { get; set; }
+        public Nullable<decimal> BasePrice { get; set; }
         public Nullable<int> CategoryID { get; set; }
         public Nullable<int> BrandID { get; set; }
+        public Nullable<bool> Featured { get; set; }
+        public Nullable<bool> BestSeller { get; set; }
+        public string Gender { get; set; }
     
         public virtual Brand Brand { get; set; }
         public virtual Category Category { get; set; }

@@ -4,23 +4,23 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="4bf28bbf083743f3919f2a2f5ffceac3" Name="Diagram1">
-        <EntityTypeShape EntityType="ShopQuanAoNhom10Model.Brand" Width="1.5" PointX="0.75" PointY="6" IsExpanded="true" />
-        <EntityTypeShape EntityType="ShopQuanAoNhom10Model.Category" Width="1.5" PointX="0.75" PointY="3" IsExpanded="true" />
-        <EntityTypeShape EntityType="ShopQuanAoNhom10Model.OrderItem" Width="1.5" PointX="7.5" PointY="7.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="ShopQuanAoNhom10Model.Order" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="ShopQuanAoNhom10Model.ProductImage" Width="1.5" PointX="5.25" PointY="8" IsExpanded="true" />
-        <EntityTypeShape EntityType="ShopQuanAoNhom10Model.Product" Width="1.5" PointX="3" PointY="5.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="ShopQuanAoNhom10Model.ProductVariant" Width="1.5" PointX="5.25" PointY="10.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="ShopQuanAoNhom10Model.User" Width="1.5" PointX="3" PointY="1.375" IsExpanded="true" />
-        <AssociationConnector Association="ShopQuanAoNhom10Model.FK__Products__BrandI__412EB0B6" ManuallyRouted="false" />
-        <AssociationConnector Association="ShopQuanAoNhom10Model.FK__Products__Catego__403A8C7D" ManuallyRouted="false" />
-        <AssociationConnector Association="ShopQuanAoNhom10Model.FK__OrderItem__Order__4F7CD00D" ManuallyRouted="false" />
-        <AssociationConnector Association="ShopQuanAoNhom10Model.FK__OrderItem__Produ__5070F446" ManuallyRouted="false" />
-        <AssociationConnector Association="ShopQuanAoNhom10Model.FK__OrderItem__Varia__5165187F" ManuallyRouted="false" />
-        <AssociationConnector Association="ShopQuanAoNhom10Model.FK__Orders__UserID__4AB81AF0" ManuallyRouted="false" />
-        <AssociationConnector Association="ShopQuanAoNhom10Model.FK__ProductIm__Produ__46E78A0C" ManuallyRouted="false" />
-        <AssociationConnector Association="ShopQuanAoNhom10Model.FK__ProductVa__Produ__440B1D61" ManuallyRouted="false" />
+      <Diagram DiagramId="0040d80b2b2148f3a9c7cc4fc4a27f1b" Name="Diagram1">
+        <EntityTypeShape EntityType="ShopFashion2025Model.Brand" Width="1.5" PointX="0.75" PointY="6.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShopFashion2025Model.Category" Width="1.5" PointX="0.75" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShopFashion2025Model.OrderItem" Width="1.5" PointX="7.5" PointY="7.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShopFashion2025Model.Order" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShopFashion2025Model.ProductImage" Width="1.5" PointX="5.25" PointY="8.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShopFashion2025Model.Product" Width="1.5" PointX="3" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShopFashion2025Model.ProductVariant" Width="1.5" PointX="5.25" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShopFashion2025Model.User" Width="1.5" PointX="3" PointY="1.375" IsExpanded="true" />
+        <AssociationConnector Association="ShopFashion2025Model.FK__Products__BrandI__412EB0B6" ManuallyRouted="false" />
+        <AssociationConnector Association="ShopFashion2025Model.FK__Products__Catego__403A8C7D" ManuallyRouted="false" />
+        <AssociationConnector Association="ShopFashion2025Model.FK__OrderItem__Order__5165187F" ManuallyRouted="false" />
+        <AssociationConnector Association="ShopFashion2025Model.FK__OrderItem__Produ__52593CB8" ManuallyRouted="false" />
+        <AssociationConnector Association="ShopFashion2025Model.FK__OrderItem__Varia__534D60F1" ManuallyRouted="false" />
+        <AssociationConnector Association="ShopFashion2025Model.FK__Orders__UserID__4CA06362" ManuallyRouted="false" />
+        <AssociationConnector Association="ShopFashion2025Model.FK__ProductIm__Produ__48CFD27E" ManuallyRouted="false" />
+        <AssociationConnector Association="ShopFashion2025Model.FK__ProductVa__Produ__45F365D3" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

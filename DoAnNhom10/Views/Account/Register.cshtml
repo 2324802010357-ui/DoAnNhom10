@@ -187,7 +187,7 @@
 .password-toggle:hover {
     color: #56ab2f;
 }
-
+                                    
 .password-strength {
     margin-top: 8px;
 }
@@ -322,7 +322,7 @@
     border-color: #28a745;
 }
 
-@media (max-width: 768px) {
+@@media (max-width: 768px) {
     .register-container {
         margin: 20px 15px;
         padding: 30px 20px;
@@ -421,7 +421,7 @@
             
             // Validate email
             var email = $('#Email').val().trim();
-            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
             if (!emailRegex.test(email)) {
                 showError('Email', 'Email không hợp lệ');
                 isValid = false;

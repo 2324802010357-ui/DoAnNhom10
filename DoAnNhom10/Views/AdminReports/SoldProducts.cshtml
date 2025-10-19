@@ -1,0 +1,71 @@
+﻿@model IEnumerable<DoAnNhom10.Models.SoldProductViewModel>
+
+
+@{
+    ViewBag.Title = "Sản phẩm đã bán";
+}
+
+<h2>📈 Thống kê sản phẩm đã bán</h2>
+
+<p>
+    <strong>Tổng doanh thu:</strong>
+    <span style="color:green; font-weight:bold;">
+        @ViewBag.TotalRevenue.ToString("N0") đ
+    </span>
+</p>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Mã sản phẩm</th>
+            <th>Tên sản phẩm</th>
+            <th>Số lượng đã bán</th>
+            <th>Doanh thu</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ProductID</td>
+                <td>@item.ProductName</td>
+                <td>@item.TotalSold</td>
+                <td>@item.TotalRevenue.ToString("N0") đ</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<style>
+    .table {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    thead {
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        color: white;
+        font-weight: bold;
+    }
+
+    tbody tr:hover {
+        background-color: #f7f7f7;
+        transition: 0.3s;
+    }
+
+    h2 {
+        color: #333;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .alert-info {
+        background: #e8f0fe;
+        border: none;
+        color: #333;
+        font-weight: 600;
+    }
+</style>
+

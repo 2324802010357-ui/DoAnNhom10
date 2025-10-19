@@ -1,0 +1,15 @@
+﻿@model DoAnNhom10.Models.Product
+@{
+    ViewBag.Title = "Thêm sản phẩm";
+}
+<h2>Thêm sản phẩm mới</h2>
+
+@using (Html.BeginForm())
+{
+    <p>Tên sản phẩm: @Html.TextBoxFor(m => m.Name)</p>
+    <p>Mô tả: @Html.TextAreaFor(m => m.Description)</p>
+    <p>Giá: @Html.TextBoxFor(m => m.BasePrice)</p>
+    <p>Danh mục: @Html.DropDownList("CategoryID", (SelectList)ViewBag.Categories)</p>
+    <p>Thương hiệu: @Html.DropDownList("BrandID", (SelectList)ViewBag.Brands)</p>
+    <p><input type="submit" value="Lưu" class="btn btn-success" /></p>
+}

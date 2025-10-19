@@ -1,0 +1,33 @@
+﻿@model IEnumerable<DoAnNhom10.Models.Product>
+@{
+    ViewBag.Title = "Quản lý sản phẩm";
+}
+<h2>Danh sách sản phẩm</h2>
+
+<p>
+    @Html.ActionLink("➕ Thêm sản phẩm", "Create")
+</p>
+
+<table class="table table-striped">
+    <tr>
+        <th>Tên sản phẩm</th>
+        <th>Giá</th>
+        <th>Danh mục</th>
+        <th>Thương hiệu</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Name</td>
+            <td>@string.Format("{0:N0} ₫", item.BasePrice)</td>
+            <td>@item.Category.Name</td>
+            <td>@item.Brand.Name</td>
+            <td>
+                @Html.ActionLink("✏️ Sửa", "Edit", new { id = item.ProductID }) |
+                @Html.ActionLink("🗑️ Xóa", "Delete", new { id = item.ProductID }, new { onclick = "return confirm('Xóa sản phẩm này?');" })
+            </td>
+        </tr>
+    }
+</table>

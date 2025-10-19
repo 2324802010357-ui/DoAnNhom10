@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = "Trang quản trị";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Xin chào, Quản trị viên 👋</h1>
+<p>Chào mừng bạn đến với trang quản trị Fashion Store!</p>
+
+<ul>
+    <li>@Html.ActionLink("Quản lý sản phẩm", "Index", "AdminProducts")</li>
+    <li>@Html.ActionLink("Quản lý danh mục", "Index", "AdminCategories")</li>
+    <li>📊 @Html.ActionLink("Sản phẩm đã bán", "SoldProducts", "AdminReports")</li>
+</ul>

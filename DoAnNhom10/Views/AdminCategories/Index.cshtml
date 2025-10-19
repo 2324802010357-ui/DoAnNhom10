@@ -1,0 +1,22 @@
+﻿@model IEnumerable<DoAnNhom10.Models.Category>
+@{
+    ViewBag.Title = "Quản lý danh mục";
+}
+<h2>Danh sách danh mục</h2>
+
+<p>@Html.ActionLink("➕ Thêm danh mục", "Create")</p>
+
+<table class="table table-striped">
+    <tr><th>Tên danh mục</th><th>Slug</th><th></th></tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Name</td>
+            <td>@item.Slug</td>
+            <td>
+                @Html.ActionLink("✏️ Sửa", "Edit", new { id = item.CategoryID }) |
+                @Html.ActionLink("🗑️ Xóa", "Delete", new { id = item.CategoryID }, new { onclick = "return confirm('Xóa danh mục này?');" })
+            </td>
+        </tr>
+    }
+</table>

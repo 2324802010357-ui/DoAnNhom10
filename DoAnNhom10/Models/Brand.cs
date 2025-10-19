@@ -22,7 +22,6 @@ namespace DoAnNhom10.Models
     
         public int BrandID { get; set; }
         public string Name { get; set; }
-        public string Slug { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Product> Products { get; set; }
